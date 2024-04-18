@@ -218,7 +218,7 @@ print(f"\tAlphabetic order sort list: {wonderful_places.sort()}")
 print(f"\tCheck normal list order: {wonderful_places}\n")
 
 print(f"\tReverse alphabetic order sort list: {wonderful_places.sort(reverse=True)}")
-print(f"\tCheck normal list order: {wonderful_places}\n")
+print(f"\tCheck normal list order: {wonderful_places}")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -312,8 +312,6 @@ for person in people:
     print(f"\tSubject last name: {person['last_name']}")
     print(f"\tSubject age: {person['age']}")
     print(f"\tSubject city: {person['city']}")
-    print("\n") # Cycle formatting
-
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -351,7 +349,6 @@ for person, places in favorite_places.items():
     print(f"\t{person}'s favorite places are:")
     for place in places:
         print(f"\t\t- {place}")
-    print("\n") # Cycle formatting
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -426,8 +423,6 @@ for person, favorites_info in favorites.items():
         for color in colors[1:]:
             print(f" and {color}", end="")
         print(".")
-
-    print()
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
