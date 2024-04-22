@@ -225,7 +225,18 @@ print("\n") # Formatting
 # Exercise 8.12 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-12. Sandwiches ↓\n")
 
+def sandwich(*args) -> None:
+    counter: int = 0
+    print("\tSandwich ingedients summary:")
+    for item in args:
+        counter += 1
+        print(f"\t-{counter} {item}")
 
+sandwich("Turkey", "Lettuce", "Tomato", "Mayonnaise")
+print()
+sandwich("Ham", "Cheese")
+print()
+sandwich("Peanut Butter", "Jelly")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -235,7 +246,12 @@ print("\n") # Formatting
 # Exercise 8.13 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-13. User Profile ↓\n")
 
+def build_profile(name: str, surname: str, age: int, height: int, weight: int) -> str:
+    profile: str = f"{name} {surname}, {age} years old, {height}cm, {weight}kg"
+    return profile
 
+simone_profile = build_profile(name="Simone", surname="Antonelli", age=19, height=185, weight=76)
+print(f"\t{simone_profile}")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -245,6 +261,20 @@ print("\n") # Formatting
 # Exercise 8.14 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-14. Cars ↓\n")
 
+def car_infos(manufacturer: str, model_name:str, **kwargs) -> dict:
+    car_dict: dict = {"manufacturer":manufacturer, "model":model_name}
+
+    if kwargs != None:
+        for key, value in kwargs.items():
+            car_dict.update({key: value})
+
+    return car_dict
+
+subaru_impreza = car_infos(manufacturer="Subaru", model_name="WRX Impreza", color='blue', sport_package=True)
+print(f"\t{subaru_impreza}")
+
+porsche_911 = car_infos(manufacturer="Porsche", model_name="911 GT3", color='Olymp Blue 914', bose_surround_sound=True)
+print(f"\t{porsche_911}")
 
 
 print("\n") # Formatting
@@ -255,7 +285,9 @@ print("\n") # Formatting
 # Exercise 8.15 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-15. Printing Models ↓\n")
 
+import ex8_15
 
+ex8_15.test()
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -265,7 +297,18 @@ print("\n") # Formatting
 # Exercise 8.16 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-16. Imports ↓\n")
 
+import ex8_16
+ex8_16.test1()
 
+from ex8_16 import test1
+ex8_16.test1()
+
+from ex8_16 import test2 as tst2
+tst2()
+
+from ex8_16 import *
+test1()
+test2()
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -276,24 +319,25 @@ print("\n") # Formatting
 print("Exercise: 8-17. Styling Functions ↓\n")
 
 
+# Done
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# Exercise 'Fibonacci' ----------------------------------------------------------------------------------------------------------
-print("Exercise: 'Fibonacci' ↓\n")
+# Exercise 'fibonacci_v1' ----------------------------------------------------------------------------------------------------------
+print("Exercise: 'fibonacci_v1' ↓\n")
 
-def fibonacci(n: int) -> int:
+def fibonacci_v1(n: int) -> int:
     if n <= 2:
         return 1
     else: 
-        return fibonacci(n=n-1) + fibonacci(n=n-2)
-    
+        return fibonacci_v1(n=n-1) + fibonacci_v1(n=n-2)
+
 user_input: int = int(input("\tInsert the number for Fibonacci sequence: "))
 
-result = fibonacci(user_input)
+result = fibonacci_v1(user_input)
 
 print(f"\tResult: {result}")
 
@@ -302,21 +346,32 @@ print("\n") # Formatting
 
 
 
-# Exercise 'Fibonacci_for' ------------------------------------------------------------------------------------------------------
-print("Exercise: 'Fibonacci_for' ↓\n")
+# Exercise 'Fibonacci_v2' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'Fibonacci_v2' ↓\n")
 
-def fibonacci_for(n: int) -> int:
-    memo:list = [0, 1]
+
+def fibonacci_v2(n: int) -> int:
+    memo: list = [0, 1]
     for i in range(1, n):
         result: int = memo[i-1] + memo[i]
         memo.append(result)
     return memo[-1]
-    
+
 user_input: int = int(input("\tInsert the number for Fibonacci sequence: "))
 
-result = fibonacci_for(user_input)
+result = fibonacci_v2(user_input)
 
 print(f"\tResult: {result}")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# Exercise 'FibonacciV3' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'FibonacciV3' ↓\n")
+
+
+
+print("\n") # Formatting
+# -------------------------------------------------------------------------------------------------------------------------------   
