@@ -94,9 +94,9 @@ start_time = time.time()
 milion_sum = sum(milion)
 end_time = time.time()
 
-elpsed_time = end_time - start_time
+elapsed_time = end_time - start_time
 
-print(f"\n\tElapsed time to sum 1 milion numbers: {elpsed_time} seconds. Sum result: {milion_sum}")
+print(f"\n\tElapsed time to sum 1 milion numbers: {elapsed_time} seconds. Sum result: {milion_sum}")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ print("\n") # Formatting
 # Exercise 4.12 -----------------------------------------------------------------------------------------------------------------
 print("Excercise: 4-12. More Loops ↓\n")
 
-
+# Done at exercise 4.11
      
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
