@@ -318,7 +318,6 @@ print("\n") # Formatting
 # Exercise 8.17 -----------------------------------------------------------------------------------------------------------------
 print("Exercise: 8-17. Styling Functions ↓\n")
 
-
 # Done
 
 print("\n") # Formatting
