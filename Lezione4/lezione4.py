@@ -367,10 +367,107 @@ print("\n") # Formatting
 
 
 
-# Exercise 'FibonacciV3' ------------------------------------------------------------------------------------------------------
-print("Exercise: 'FibonacciV3' ↓\n")
+# Exercise 'Fibonacci_v2' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'Fibonacci_v3' ↓\n")
 
 
 
 print("\n") # Formatting
+# -------------------------------------------------------------------------------------------------------------------------------
+
+non_ordered: list = [i for i in range(10_000, 0, -1)]
+
+# Exercise 'buble sort v1' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'Buble sort v1' ↓\n")
+
+import time
+
+def buble_sort_v1(a: list) -> list:
+    for _ in range(len(a)):
+        for j in range(len(a) - 1): # Every time the function DOES check also until the last index of the precedent iteration
+            if a[j] > a[j + 1]:
+                at = a[j]
+                a[j] = a[j + 1]
+                a[j + 1] = at
+    return a
+
+
+time_start: float = time.time()
+oredered = buble_sort_v1(non_ordered)
+time_end: float = time.time()
+time_elapsed: float = time_end - time_start
+
+choice = input(f"\tList ordered in {time_elapsed:.3f} seconds, do you want to print the list (Y/N): ")
+
+if choice.upper() == "Y":
+    print(f"\t{oredered}")
+
+print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------   
+
+
+
+# Exercise 'buble sort v2' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'Buble sort v2' ↓\n")
+
+import time
+
+def buble_sort_v2(a: list) -> list:
+    for i in range(len(a)):
+        for j in range(len(a) - i - 1): # Every time the function DOES NOT check until the last index of the precedent iteration
+            if a[j] > a[j + 1]:
+                at = a[j]
+                a[j] = a[j + 1]
+                a[j + 1] = at
+    return a
+
+
+time_start: int = time.time()
+oredered = buble_sort_v2(non_ordered)
+time_end: int = time.time()
+time_elapsed: int = time_end - time_start
+
+choice = input(f"\tList ordered in {time_elapsed:.3f} seconds, do you want to print the list (Y/N): ")
+
+if choice.upper() == "Y":
+    print(f"\t{oredered}")
+
+print("\n") # Formatting
+# -------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# Exercise 'buble sort v2' ------------------------------------------------------------------------------------------------------
+print("Exercise: 'Buble sort v3' ↓\n")
+
+import time
+
+def buble_sort_v3(a: list) -> list:
+    for i in range(len(a)):
+        swap_flag: bool = False
+        for j in range(len(a) - i - 1): # Can istantly know that the list is already ordered 
+            if a[j] > a[j + 1]:
+                swap_flag = True
+                at = a[j]
+                a[j] = a[j + 1]
+                a[j + 1] = at
+        if swap_flag is False:
+            return a
+
+
+time_start: int = time.time()
+oredered = buble_sort_v3(non_ordered)
+time_end: int = time.time()
+time_elapsed: int = time_end - time_start
+
+choice = input(f"\tList ordered in {time_elapsed:.3f} seconds, do you want to print the list (Y/N): ")
+
+if choice.upper() == "Y":
+    print(f"\t{oredered}")
+
+print("\n") # Formatting
+# -------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# Use https://visualgo.net/en to view how algorithms works
