@@ -28,7 +28,6 @@ def anagram_checker(string1: str, string2: str) -> bool:
         for index in range(len(string1_list)):
             if string1_list[index] != string2_list[index]:
                 return False
-        
         return True
 
     
