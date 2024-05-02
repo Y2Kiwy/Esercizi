@@ -1,6 +1,17 @@
 from random import randint
 
-def guess_number(min_range, max_range, max_attempts):   
+def guess_number(min_range: int, max_range: int, max_attempts: int):   
+    """
+    Guess the secret number within a given range with limited attempts.
+
+    Args:
+        min_range (int): The lower bound of the range.
+        max_range (int): The upper bound of the range.
+        max_attempts (int): The maximum number of attempts allowed.
+
+    Returns:
+        None
+    """
     secret_number = randint(min_range, max_range)
     
     for attempt in range(max_attempts, 0, -1):

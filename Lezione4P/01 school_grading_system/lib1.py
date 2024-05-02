@@ -1,8 +1,11 @@
-def score_checker(student_name: str, score: list) -> None:
+def score_checker(scores: list) -> int:
+    '''Calculate the average score for a student exams scores and return an int
 
-    average_score = sum(score) / len(score)
+    Args:
+        scores: list -> The scores of the student exams
+    '''
 
-    if average_score >= 60:
-        print(f"\tStudent: {student_name} has passed the exam with an average score of: {average_score:.2f}")
-    else:
-        print(f"\tStudent: {student_name} has not passed the exam.")
+    # Calculate the average of the list numbers
+    average_score: int = sum(scores) / len(scores)
+
+    return average_score
