@@ -8,7 +8,7 @@ def pswd_generator(length: int, **options) -> str:
 
     Parameters:
     - length (int): Length of the password to be generated.
-    - **kwargs: Additional keyword arguments to specify which character types to include in the password.
+    - **options: Additional keyword arguments to specify which character types to include in the password.
       Valid keyword arguments:
         - lower (bool): If True, include lowercase letters. Default: True.
         - upper (bool): If True, include uppercase letters. Default: True.
@@ -31,9 +31,9 @@ def pswd_generator(length: int, **options) -> str:
         if include:
             chars += chars_dict[category]
 
-    chars = ''.join(random.sample(chars, len(chars)))
+    chars: str = ''.join(random.sample(chars, len(chars)))
 
-    password = ''
+    password: str = ''
     for _ in range(length):
         password += random.choice(chars)
 
