@@ -33,6 +33,31 @@ def blackjack_hand_total(cards: list[int]) -> int:
                 hand_total += 1
         
     return hand_total
+
+
+def blackjack_hand_total_opt(cards: list[int]) -> int:
+    # Calculate the total value of non-ace cards
+    hand_total: int = sum(card for card in cards if card != 11 and card != 1)
+    
+    # Count the number of aces (both 1 and 11) in the hand
+    ace_counter: int = cards.count(1) + cards.count(11)  
+    
+    # Iterate through each ace in the hand
+    while ace_counter > 0:
+        # If adding 11 to the total won't bust, count it as 11
+        if hand_total <= 10:
+            hand_total += 11
+        # If the current total is 21 and an the previus ace counts as 11, adjust it to count as 1 instead
+        elif hand_total == 21:
+            hand_total -= 10
+            hand_total += 1
+        # If adding 11 would bust, count the ace as 1
+        else:
+            hand_total += 1
+        # Decrease the counter for remaining aces
+        ace_counter -= 1
+    
+    return hand_total
 # -----------------------------------------------------------------------------
 
 
@@ -55,14 +80,27 @@ def construct_rectangle(area: int) -> list[int]:
         w = int(area / l)  
 
     # Return a list containing the length and width of the constructed web page
-    return [l, w]  
+    return [l, w]
+
+
+def construct_rectangle_opt(area: int) -> list[int]:
+    # Initialize the length with the square root of the area rounded to the nearest integer
+    l = int(math.sqrt(area))
+
+    # Search for the width starting from the calculated length
+    while area % l != 0:
+        l -= 1
+
+    # Calculate the width
+    w = area // l
+
+    return [w, l]
 # -----------------------------------------------------------------------------
 
 
 # Exercise 3: -----------------------------------------------------------------
 import string
 import copy
-
 def word_frequency(text: str, stopwords: list[str]) -> dict[str, int]:
     
     # Define a string containing all lowercase letters of the alphabet along with a space character.
@@ -106,12 +144,28 @@ def word_frequency(text: str, stopwords: list[str]) -> dict[str, int]:
 
     # Return the dictionary containing word counts.
     return word_counts
+
+
+import re
+def word_frequency_opt(text: str, stopwords: list[str]) -> dict[str, int]:
+    # Convert the input text to lowercase and remove non-alphabetic characters
+    text = re.sub(r'[^a-z\s]', '', text.lower())
+
+    # Remove stopwords from the text
+    for stopword in stopwords:
+        text = re.sub(rf'\b{stopword}\b', '', text)
+
+    # Count the frequency of each word
+    word_counts = {}
+    for word in text.split():
+        word_counts[word] = word_counts.get(word, 0) + 1
+
+    return word_counts
 # -----------------------------------------------------------------------------
 
 
 # Exercise 4: -----------------------------------------------------------------
 import copy
-
 def find_disappeared_numbers(nums: list[int]) -> list[int]:
     
     missing_nums: list[int] = []
@@ -122,6 +176,18 @@ def find_disappeared_numbers(nums: list[int]) -> list[int]:
 
     return missing_nums
 
+
+def find_disappeared_numbers_opt(nums: list[int]) -> list[int]:
+    # Initialize a set to store all numbers from 1 to the length of nums
+    num_set = set(range(1, len(nums) + 1))
+    
+    # Convert nums to a set for faster membership checking
+    nums_set = set(nums)
+    
+    # Calculate the set difference to find missing numbers
+    missing_nums = list(num_set - nums_set)
+    
+    return missing_nums
 # -----------------------------------------------------------------------------
 
 
@@ -145,7 +211,6 @@ def is_subsequence(s: str, t: str) -> bool:
         
         # If s_index reaches the end of s, it means all characters in s were found in t in the correct order
         return s_index == len(s)
-
 # -----------------------------------------------------------------------------
 
 
@@ -218,6 +283,17 @@ def third_max(nums: list[int]) -> int:
     else:
         # If there are less than three distinct numbers, return the maximum number
         return max(nums)
+
+
+def third_max_opt(nums: list[int]) -> int:
+    unique_nums = set(nums)
+    
+    # Se ci sono meno di 3 numeri unici, restituisci il massimo
+    if len(unique_nums) < 3:
+        return max(unique_nums)
+    
+    # Altrimenti, restituisci il terzo massimo
+    return sorted(unique_nums)[-3]
 # -----------------------------------------------------------------------------
 
 
@@ -225,54 +301,70 @@ def third_max(nums: list[int]) -> int:
 
 # Exercise additional 1: ------------------------------------------------------
 def find_lhs(nums: list[int]) -> int:
-    
+    # List to store possible lengths
     possible_length: list = []
+
+    # Counters for two types of lengths
     counter_length1: int = 0
     counter_length2: int = 0
+    
+    # Flag to check repetition
     repetition: bool = True
     
+    # Loop through each number in the list
     for num1 in nums:
         for num2 in nums:
-
-            print(f"Checking if {num1} and {num2} are close")
-
+            # If two numbers are the same
             if num1 == num2:
                 counter_length1 += 1
                 counter_length2 += 1
-                print(f"Same, +1 -> cl1: {counter_length1} - cl2 -> {counter_length2}")
 
+            # If the difference between two numbers is 1
             elif num1 - num2 == 1:
                 counter_length1 += 1
                 repetition = False
-                print(f"Close by 1, added +1 -> cl1: {counter_length1} - cl2 -> {counter_length2}")
 
+            # If the difference between two numbers is -1
             elif num1 - num2 == -1:
                 counter_length2 += 1
                 repetition = False
-                print(f"Close by -1, added +1 -> cl1: {counter_length1} - cl2 -> {counter_length2}")
 
-            else:
-                print(f"Not close -> cl1: {counter_length1} - cl2 -> {counter_length2}")
-        
-        print(f"Length: -> cl1: {counter_length1} - cl2 -> {counter_length2}\n")
-
+        # If there is a repetition, return 0
         if repetition:
             return 0
 
+        # If counter_length1 is greater than or equal to counter_length2
         elif counter_length1 >= counter_length2:
             possible_length.append(counter_length1)
 
+        # If counter_length1 is less than counter_length2
         elif counter_length1 < counter_length2:
             possible_length.append(counter_length1)
 
+        # Reset counters
         counter_length1: int = 0
         counter_length2: int = 0
 
-    print(possible_length)
-
+    # Return the maximum possible length
     return max(possible_length)
 
-print(find_lhs([10,20,30,40,50]))
+
+from collections import Counter
+def find_lhs_opt(nums: list[int]) -> int:
+    # Check for repetitions
+    if len(set(nums)) == len(nums):
+        return 0
+    
+    # Calculate frequencies of numbers and their successors and predecessors
+    counter = Counter(nums)
+    max_length = 0
+    
+    for num in counter:
+        if num + 1 in counter:
+            # Calculate the length of the longest harmonious sequence
+            max_length = max(max_length, counter[num] + counter[num + 1])
+    
+    return max_length
 # -----------------------------------------------------------------------------
 
 
@@ -300,24 +392,10 @@ def ransom(note: str, magazine: str) -> bool:
 # Exercise additional 3: ------------------------------------------------------
 def to_hex(num: int) -> str:
     # Dictionary mapping decimal values to hexadecimal characters
-    hexadecimal_dict = {
-        0: '0',
-        1: '1',
-        2: '2',
-        3: '3',
-        4: '4',
-        5: '5',
-        6: '6',
-        7: '7',
-        8: '8',
-        9: '9',
-        10: 'a',
-        11: 'b',
-        12: 'c',
-        13: 'd',
-        14: 'e',
-        15: 'f'
-    }
+    hexadecimal_dict = {0: '0',  1: '1',  2: '2',  3: '3',
+                        4: '4',  5: '5',  6: '6',  7: '7',
+                        8: '8',  9: '9',  10: 'a', 11: 'b',
+                        12: 'c', 13: 'd', 14: 'e', 15: 'f'}
 
     # Handle the case of negative numbers in input
     if num < 0:
