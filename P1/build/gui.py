@@ -16,29 +16,46 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
+# Initialize variables to collect transaction amount
+transaction_expense: float = 0.00
+transaction_income: float = 0.00
+
+# Handles submission of transaction amounts and updates global variables and canvas display accordingly
+def submit_handler() -> None:
+
+    global transaction_expense
+    global transaction_income
+
+    # Retrieve the transaction amount entered by the user
+    new_transaction_amt: float = float(entry_2.get())
+
+    # Check if the transaction amount is positive (income)
+    if new_transaction_amt > 0:
+        # If positive, add it to the transaction income
+        transaction_income += new_transaction_amt
+        # Update the displayed income on the canvas
+        canvas.itemconfig(tagOrId=income, text=f"{transaction_income:,.2f}€")
+
+    # Check if the transaction amount is negative (expense)
+    elif new_transaction_amt < 0:
+        # If negative, add it to the transaction expense
+        transaction_expense += new_transaction_amt
+        # Update the displayed expense on the canvas
+        canvas.itemconfig(tagOrId=expense, text=f"{transaction_expense:,.2f}€")
+
+    # Update the balance label by adding income and subtracting expenses
+    update_balance = transaction_income + transaction_expense
+    # Update the displayed balance on the canvas
+    canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
+
+
+
 window = Tk()
 
 window.geometry("640x480")
 window.configure(bg = "#FFFFFF")
 
-transaction_expense: float = 0.00
-transaction_income: float = 0.00
 
-def submit_handler() -> None:
-    # Make variable 'transaction' global
-    global transaction_expense
-    global transaction_income
-
-    # Get the amount of the new transaction
-    new_transaction_amt: float = float(entry_2.get())
-
-    if new_transaction_amt > 0:
-        transaction_income += new_transaction_amt
-        canvas.itemconfig(tagOrId=income, text=f"{transaction_income:,.2f}€")
-    
-    elif new_transaction_amt < 0:
-        transaction_expense += new_transaction_amt
-        canvas.itemconfig(tagOrId=expense, text=f"{transaction_expense:,.2f}€")
 
 canvas = Canvas(
     window,
@@ -68,6 +85,8 @@ canvas.create_text(
     font=("Ubuntu", 32 * -1, "bold")
 )
 
+
+
 image_image_1 = PhotoImage(
     file=relative_to_assets("image_1.png"))
 image_1 = canvas.create_image(
@@ -91,6 +110,8 @@ image_3 = canvas.create_image(
     160.0,
     image=image_image_3
 )
+
+
 
 canvas.create_text(
     72.0,
@@ -173,6 +194,8 @@ canvas.create_text(
     font=("Ubuntu", 12 * -1, "bold")
 )
 
+
+
 entry_image_1 = PhotoImage(
     file=relative_to_assets("entry_1.png"))
 entry_bg_1 = canvas.create_image(
@@ -213,6 +236,8 @@ entry_2.place(
     height=30.0
 )
 
+
+
 canvas.create_text(
     488.0,
     335.0,
@@ -242,6 +267,8 @@ entry_3.place(
     height=30.0
 )
 
+
+
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
 button_1 = Button(
@@ -258,6 +285,8 @@ button_1.place(
     height=48.0
 )
 
+
+
 image_image_4 = PhotoImage(
     file=relative_to_assets("image_4.png"))
 image_4 = canvas.create_image(
@@ -265,5 +294,8 @@ image_4 = canvas.create_image(
     48.0,
     image=image_image_4
 )
+
+
+
 window.resizable(False, False)
 window.mainloop()
