@@ -5,7 +5,7 @@ OUTPUT_PATH = Path(__file__).parent.parent
 APP_PATH = OUTPUT_PATH / "data"
 DB_PATH = APP_PATH / "transaction.db"
 
-def add_transaction(name: str, amount: float, date: str) -> None:
+def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     """
     Add a transaction to the database.
 
@@ -23,12 +23,12 @@ def add_transaction(name: str, amount: float, date: str) -> None:
     # Create a cursor object to execute SQLite statements
     c = conn.cursor()
 
-    # Create the 'transactions' table if it doesn't exist, with columns id, name, amount, and date
-    c.execute('''CREATE TABLE IF NOT EXISTS transactions
+    # Create the table if it doesn't exist, with columns id, name, amount, and date
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {table}
                 (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT)''')
 
-    # Insert a new row into the 'transactions' table with the provided name, amount and date
-    c.execute("INSERT INTO transactions (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:.2f}", date))
+    # Insert a new row into the table with the provided name, amount and date
+    c.execute(f"INSERT INTO {table} (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:.2f}", date))
 
     # Commit the changes to the database
     conn.commit()
@@ -37,7 +37,7 @@ def add_transaction(name: str, amount: float, date: str) -> None:
     c.close()
     conn.close()
 
-# add_transaction("Spesa", 138.76, "06/05/2024 16:34:45")
+#add_transaction("transactions1", "Spesa", 138.76, "06/05/2024 16:34:45")
 
 
 def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new_value: str) -> None:

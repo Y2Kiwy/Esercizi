@@ -15,10 +15,10 @@ OUTPUT_PATH = Path(__file__).parent.parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "frame0"
 DBF_PATH = OUTPUT_PATH / "data"
 
-
+# Append the path to import the database functions (dbf.py)
 sys.path.append(str(DBF_PATH))
 
-from dbf import * # type: ignore
+from dbf import *
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -34,20 +34,23 @@ def submit_transaction() -> None:
     global transaction_expense
     global transaction_income
 
-    # Retrieve the transaction amount entered by the user and format it for Python decimals declaration standard
-    new_transaction_amt = float(entry_2.get().replace(",", "."))
+    # Retrieve the new transaction name, amount and data entered by the user
+    newT_name = entry_1.get()
+    newT_amount = float(entry_2.get().replace(",", ".")) # Format amount for Python decimals declaration standard
+    newT_date = entry_3.get()
+
 
     # Check if the transaction amount is positive (income)
-    if new_transaction_amt > 0:
+    if newT_amount > 0:
         # If positive, add it to the transaction income
-        transaction_income += new_transaction_amt
+        transaction_income += newT_amount
         # Update the displayed income on the canvas
         canvas.itemconfig(tagOrId=income, text=f"{transaction_income:,.2f}€")
 
     # Check if the transaction amount is negative (expense)
-    elif new_transaction_amt < 0:
+    elif newT_amount < 0:
         # If negative, add it to the transaction expense
-        transaction_expense += new_transaction_amt
+        transaction_expense += newT_amount
         # Update the displayed expense on the canvas
         canvas.itemconfig(tagOrId=expense, text=f"{transaction_expense:,.2f}€")
 
@@ -55,6 +58,9 @@ def submit_transaction() -> None:
     update_balance = transaction_income + transaction_expense
     # Update the displayed balance on the canvas
     canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
+
+    # Add the new transaction to the database
+    add_transaction(table="transactions1", name=newT_name, amount=newT_amount, date=newT_date)
 
 
 
