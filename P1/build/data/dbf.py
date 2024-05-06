@@ -70,7 +70,7 @@ def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new
     conn.close()
 
 
-def delet_transaction(table: str, primary_key: str) -> None:
+def delete_transaction(table: str, primary_key: str) -> None:
     """
     Delete a row from a table in the SQLite database based on its primary key value.
 

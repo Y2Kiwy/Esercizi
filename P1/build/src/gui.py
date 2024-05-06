@@ -5,12 +5,20 @@
 
 from pathlib import Path
 
+import sys
+
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 OUTPUT_PATH = Path(__file__).parent.parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "frame0"
+DBF_PATH = OUTPUT_PATH / "data"
+
+
+sys.path.append(str(DBF_PATH))
+
+from dbf import * # type: ignore
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
