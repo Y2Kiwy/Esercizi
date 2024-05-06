@@ -9,7 +9,7 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
-OUTPUT_PATH = Path(__file__).parent
+OUTPUT_PATH = Path(__file__).parent.parent
 ASSETS_PATH = OUTPUT_PATH / "assets" / "frame0"
 
 def relative_to_assets(path: str) -> Path:
@@ -21,13 +21,13 @@ transaction_expense: float = 0.00
 transaction_income: float = 0.00
 
 # Handles submission of transaction amounts and updates global variables and canvas display accordingly
-def submit_handler() -> None:
+def submit_transaction() -> None:
 
     global transaction_expense
     global transaction_income
 
-    # Retrieve the transaction amount entered by the user
-    new_transaction_amt: float = float(entry_2.get())
+    # Retrieve the transaction amount entered by the user and format it for Python decimals declaration standard
+    new_transaction_amt = float(entry_2.get().replace(",", "."))
 
     # Check if the transaction amount is positive (income)
     if new_transaction_amt > 0:
@@ -275,7 +275,7 @@ button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: submit_handler(),
+    command=lambda: submit_transaction(),
     relief="flat"
 )
 button_1.place(
@@ -283,6 +283,22 @@ button_1.place(
     y=400.0,
     width=544.0,
     height=48.0
+)
+
+button_image_2 = PhotoImage(
+    file=relative_to_assets("button_2.png"))
+button_2 = Button(
+    image=button_image_2,
+    borderwidth=0,
+    highlightthickness=0,
+    command=lambda: print("button_2 clicked"),
+    relief="flat"
+)
+button_2.place(
+    x=616.0,
+    y=456.0,
+    width=16.0,
+    height=16.0
 )
 
 
