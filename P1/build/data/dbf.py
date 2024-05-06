@@ -1,5 +1,5 @@
-import sqlite3
 from pathlib import Path
+import sqlite3
 
 OUTPUT_PATH = Path(__file__).parent.parent
 APP_PATH = OUTPUT_PATH / "data"
@@ -96,3 +96,64 @@ def delete_transaction(table: str, primary_key: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
+
+
+def collect_income_total(table: str) -> list[tuple]:
+    """
+    Collects the total income from transactions in the specified table.
+
+    Parameters:
+    - table (str): The name of the table containing the transactions.
+
+    Returns:
+    - list[tuple]: A list of tuples containing the income amounts.
+    """
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Build the SQL query and execute it to select all income transactions
+    c.execute(f"SELECT amount FROM {table} WHERE amount > 0")
+    
+    # Fetch the results
+    data = c.fetchall()
+    
+    # Close the connection
+    conn.close()
+    
+    return data
+db_data_raw: list[tuple] = collect_income_total(table="transactions1")
+db_data = [int(value[0]) for value in db_data_raw]
+print(db_data)
+
+def collect_expense_total(table: str) -> list[tuple]:
+    """
+    Collects the total expenses from transactions in the specified table.
+
+    Parameters:
+    - table (str): The name of the table containing the transactions.
+
+    Returns:
+    - list[tuple]: A list of tuples containing the expense amounts.
+    """
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Build the SQL query and execute it to select all expense transactions
+    c.execute(f"SELECT amount FROM {table} WHERE amount < 0")
+    
+    # Fetch the results
+    data = c.fetchall()
+    
+    # Close the connection
+    conn.close()
+    
+    return data
+db_data_raw: list[tuple] = collect_expense_total(table="transactions1")
+db_data = [int(value[0]) for value in db_data_raw]
+print(db_data)
