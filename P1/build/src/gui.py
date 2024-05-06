@@ -17,9 +17,14 @@ DBF_PATH = OUTPUT_PATH / "data"
 
 # Append the path to import the database functions (dbf.py)
 sys.path.append(str(DBF_PATH))
-
 from dbf import *
 
+# Create the path to the database and check if it exist
+DB_PATH = DBF_PATH / "transactions.db"
+if not DB_PATH.exists():
+    initialize_db("transactions1", 1_000)
+
+# Build assets path
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 

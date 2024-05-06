@@ -2,8 +2,30 @@ from pathlib import Path
 import sqlite3
 
 OUTPUT_PATH = Path(__file__).parent.parent
-APP_PATH = OUTPUT_PATH / "data"
-DB_PATH = APP_PATH / "transaction.db"
+DATA_PATH = OUTPUT_PATH / "data"
+DB_PATH = DATA_PATH / "transactions.db"
+
+def initialize_db(table: str, balance: float) -> None:
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Create the table if it doesn't exist, with columns id, name, amount, date, and balance
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {table}
+                (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT, balance REAL)''')
+
+    # Insert a new row into the table with the provided name, amount, date, and balance
+    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (None, None, None, balance))
+
+    # Commit the changes to the database
+    conn.commit()
+
+    # Close the cursor and the connection
+    c.close()
+    conn.close()
+
 
 def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     """
@@ -17,18 +39,21 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     Returns:
     - None
     """
+    # Extract last knowkn balance and convert it to float
+    last_balance_raw: list[tuple] = collect_balance(table)
+    last_balance: float = last_balance_raw[0]
+
+    # Update the balance adding the transaction amount
+    new_balance = last_balance + amount
+
     # Connect to the SQLite database using the provided DB_PATH
     conn = sqlite3.connect(DB_PATH)
 
     # Create a cursor object to execute SQLite statements
     c = conn.cursor()
 
-    # Create the table if it doesn't exist, with columns id, name, amount, and date
-    c.execute(f'''CREATE TABLE IF NOT EXISTS {table}
-                (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT)''')
-
     # Insert a new row into the table with the provided name, amount and date
-    c.execute(f"INSERT INTO {table} (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:.2f}", date))
+    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (name, f"{amount:.2f}", date, new_balance))
 
     # Commit the changes to the database
     conn.commit()
@@ -36,7 +61,6 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
-
 #add_transaction("transactions1", "Spesa", 138.76, "06/05/2024 16:34:45")
 
 
@@ -96,6 +120,7 @@ def delete_transaction(table: str, primary_key: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
+#delete_transaction("transaction1", 2)
 
 
 def collect_income_total(table: str) -> list[tuple]:
@@ -124,9 +149,10 @@ def collect_income_total(table: str) -> list[tuple]:
     conn.close()
     
     return data
-db_data_raw: list[tuple] = collect_income_total(table="transactions1")
-db_data = [int(value[0]) for value in db_data_raw]
-print(db_data)
+# db_data_raw: list[tuple] = collect_income_total(table="transactions1")
+# db_data = [int(value[0]) for value in db_data_raw]
+# print(db_data)
+
 
 def collect_expense_total(table: str) -> list[tuple]:
     """
@@ -154,6 +180,34 @@ def collect_expense_total(table: str) -> list[tuple]:
     conn.close()
     
     return data
-db_data_raw: list[tuple] = collect_expense_total(table="transactions1")
-db_data = [int(value[0]) for value in db_data_raw]
-print(db_data)
+# db_data_raw: list[tuple] = collect_expense_total(table="transactions1")
+# db_data = [int(value[0]) for value in db_data_raw]
+# print(db_data)
+
+
+def collect_balance(table: str) -> list[tuple]:
+    """
+    Collects the balance of the last transaction.
+
+    Parameters:
+    - table (str): The name of the table containing the transactions.
+
+    Returns:
+    - list[tuple]: A list of tuples containing the balance.
+    """
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Build the SQL query and execute it to select all expense transactions
+    c.execute(f"SELECT balance FROM {table} ORDER BY id DESC LIMIT 1")
+    
+    # Fetch the results
+    data = c.fetchone()
+    
+    # Close the connection
+    conn.close()
+    
+    return data
