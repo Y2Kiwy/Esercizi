@@ -44,23 +44,32 @@ def submit_transaction() -> None:
     newT_amount = float(entry_2.get().replace(",", ".")) # Format amount for Python decimals declaration standard
     newT_date = entry_3.get()
 
+    last_balance_raw: list[tuple] = collect_balance("transactions1")
+    last_balance: float = last_balance_raw[0]
 
     # Check if the transaction amount is positive (income)
     if newT_amount > 0:
+        total_income_raw: float = collect_income_total("transactions1")
+        total_income: float = [float(value[0]) for value in total_income_raw]
+        total_income: float = sum(total_income)
         # If positive, add it to the transaction income
-        transaction_income += newT_amount
+        total_income += newT_amount
         # Update the displayed income on the canvas
-        canvas.itemconfig(tagOrId=income, text=f"{transaction_income:,.2f}€")
+        canvas.itemconfig(tagOrId=income, text=f"{total_income:,.2f}€")
 
     # Check if the transaction amount is negative (expense)
     elif newT_amount < 0:
+        total_expense_raw: float = collect_expense_total("transactions1")
+        total_expense: float = [float(value[0]) for value in total_expense_raw]
+        total_expense: float = sum(total_expense)
         # If negative, add it to the transaction expense
         transaction_expense += newT_amount
         # Update the displayed expense on the canvas
         canvas.itemconfig(tagOrId=expense, text=f"{transaction_expense:,.2f}€")
 
     # Update the balance label by adding income and subtracting expenses
-    update_balance = transaction_income + transaction_expense
+    update_balance = last_balance + newT_amount
+
     # Update the displayed balance on the canvas
     canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
 
@@ -159,29 +168,37 @@ canvas.create_text(
     font=("Ubuntu", 12 * -1, "bold")
 )
 
+total_income_raw: float = collect_income_total("transactions1")
+total_income: float = [float(value[0]) for value in total_income_raw]
+total_income: float = sum(total_income)
 income = canvas.create_text(
     72.0,
     152.0,
     anchor="nw",
-    text="0€",
+    text=f"{total_income:,.2f}€",
     fill="#4F4500",
     font=("Ubuntu", 24 * -1, "bold")
 )
 
+last_balance_raw: list[tuple] = collect_balance("transactions1")
+last_balance: float = last_balance_raw[0]
 balance = canvas.create_text(
     72.0,
     232.0,
     anchor="nw",
-    text="0€",
+    text=f"{last_balance:,.2f}€",
     fill="#0A4B00",
     font=("Ubuntu", 24 * -1, "bold")
 )
 
+total_expense_raw: float = collect_expense_total("transactions1")
+total_expense: float = [float(value[0]) for value in total_expense_raw]
+total_expense: float = sum(total_expense)
 expense = canvas.create_text(
     360.0,
     152.0,
     anchor="nw",
-    text="0€",
+    text=f"{total_expense:,.2f}€",
     fill="#660000",
     font=("Ubuntu", 24 * -1, "bold")
 )

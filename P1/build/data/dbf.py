@@ -120,7 +120,10 @@ def delete_transaction(table: str, primary_key: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
-#delete_transaction("transaction1", 2)
+'''
+for x in range(1, 10):
+    delete_transaction("transactions1", x)
+'''
 
 
 def collect_income_total(table: str) -> list[tuple]:
