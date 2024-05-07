@@ -64,8 +64,8 @@ def generate_pdf_from_db() -> None:
     conn.close()
 
     # Create the PDF document
-    pdf_filename = "transactions1.pdf"
-    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    pdf_path = "transactions1.pdf"
+    doc = SimpleDocTemplate(pdf_path, pagesize=letter)
     data = []
 
     # Add the table header
@@ -90,4 +90,4 @@ def generate_pdf_from_db() -> None:
     # Add the table to the document
     doc.build([table])
 
-    print("PDF file successfully created:", pdf_filename)
+    print("PDF file successfully created:", pdf_path)
