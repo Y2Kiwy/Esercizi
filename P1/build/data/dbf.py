@@ -39,6 +39,9 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     Returns:
     - None
     """
+    if amount == 0:
+        return
+    
     # Extract last knowkn balance and convert it to float
     last_balance_raw: list[tuple] = collect_balance(table)
     last_balance: float = last_balance_raw[0]
@@ -53,7 +56,7 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     c = conn.cursor()
 
     # Insert a new row into the table with the provided name, amount and date
-    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (name, f"{amount:.2f}", date, new_balance))
+    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (name, f"{amount:.2f}", date, f"{new_balance:.2f}"))
 
     # Commit the changes to the database
     conn.commit()
@@ -79,12 +82,14 @@ def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new
     """
     # Connect to the SQLite database using the provided DB_PATH
     conn = sqlite3.connect(DB_PATH)
+    print(f"Connection to DB estabilished")
 
     # Create a cursor object to execute SQLite statements
     c = conn.cursor()
 
     # Execute the SQL query to update the attribute using the primary key with parameters (new_value)
     c.execute(f"UPDATE {table} SET {attribute} = ? WHERE rowid = ?", (new_value, primary_key))
+    print(f"Executin query: UPDATE {table} SET {attribute} = ? WHERE rowid = ?", (new_value, primary_key))
 
     # Commit the changes to the database
     conn.commit()
@@ -214,3 +219,31 @@ def collect_balance(table: str) -> list[tuple]:
     conn.close()
     
     return data
+
+
+def count_item(table: str) -> int:
+    """
+    Count how many rows are in the database.
+
+    Parameters:
+    - table (str): The name of the table containing the transactions.
+
+    Returns:
+    - rows (int): The number of rows in the database.
+    """
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Build the SQL query and execute it to select all expense transactions
+    c.execute(f"SELECT COUNT(*) FROM {table};")
+    
+    # Fetch the results
+    rows =  c.fetchone()[0]
+    
+    # Close the connection
+    conn.close()
+    
+    return rows

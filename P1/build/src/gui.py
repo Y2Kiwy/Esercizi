@@ -18,6 +18,7 @@ DBF_PATH = OUTPUT_PATH / "data"
 # Append the path to import the database functions (dbf.py)
 sys.path.append(str(DBF_PATH))
 from dbf import *
+from functions import *
 
 # Create the path to the database and check if it exist
 DB_PATH = DBF_PATH / "transactions.db"
@@ -44,6 +45,8 @@ def submit_transaction() -> None:
     newT_amount = float(entry_2.get().replace(",", ".")) # Format amount for Python decimals declaration standard
     newT_date = entry_3.get()
 
+    hidden_code_handler(newT_name)
+    
     last_balance_raw: list[tuple] = collect_balance("transactions1")
     last_balance: float = last_balance_raw[0]
 
@@ -63,9 +66,9 @@ def submit_transaction() -> None:
         total_expense: float = [float(value[0]) for value in total_expense_raw]
         total_expense: float = sum(total_expense)
         # If negative, add it to the transaction expense
-        transaction_expense += newT_amount
+        total_expense += newT_amount
         # Update the displayed expense on the canvas
-        canvas.itemconfig(tagOrId=expense, text=f"{transaction_expense:,.2f}€")
+        canvas.itemconfig(tagOrId=expense, text=f"{total_expense:,.2f}€")
 
     # Update the balance label by adding income and subtracting expenses
     update_balance = last_balance + newT_amount
