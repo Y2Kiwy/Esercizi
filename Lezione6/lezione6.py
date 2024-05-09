@@ -8,14 +8,18 @@ print("\n") # Formatting
 
 
 # Teoria ---------------------------------------------------------------------
+print("Theory: 1. Classes ↓\n")
+
+import time
+
+start: time = time.time()
 import re
 import pandas as pd
 from pathlib import Path
+end: time = time.time()
+print(f"\tElapsed time to import needed libs: {end - start}") # Virtual machines (2 cores and 10GB ram) is a bit slow
 
 CSV_PATH = Path(__file__).parent / "gi_db_comuni-2024-04-10-a9b29" / "csv"
-
-
-print("Theory: 1. Classes ↓\n")
 
 class Person:
 
@@ -164,6 +168,7 @@ class Person:
     
 
     def compute_cadastral_code(self, birth_place: str) -> str:
+
         cadastral_codes: pd.DataFrame = pd.read_csv(CSV_PATH / "gi_comuni_nazioni_cf.csv", delimiter=';')
 
         city_name_corrispondency = cadastral_codes[cadastral_codes['denominazione_ita'] == birth_place.upper()]
@@ -171,6 +176,7 @@ class Person:
         # Se trova una corrispondenza, restituisci il codice catastale
         if not city_name_corrispondency.empty:
             codice_catastale = city_name_corrispondency.iloc[0]['codice_belfiore']
+
             return str(codice_catastale)
 
     def compute_control(self, digits_15: str) -> str:
@@ -322,6 +328,51 @@ p2: Person = Person("Leonardo", "Brussani", "2004-07-24", "Roma", "male")
 
 print(f"\n\tThe ssn for {p2.get_name()} {p2.get_surname()} is: {p2.get_ssn()}")
 
+
+print("\n") # Formatting
+# ----------------------------------------------------------------------------
+
+
+
+# Teoria esercizio 3 ---------------------------------------------------------
+
+print("Theory exercise: 3. Animals ↓\n")
+
+class Animal:
+    def __init__(self, name: str, legs: int) -> None:
+        self._name = name
+        self._legs = legs
+
+    def get_all(self) -> str:
+        return f"\tObject name: {self._name}\n\tObject legs: {self._legs}"
+
+    def get_name(self) -> str:
+        return self._name
+    def set_name(self, value: str) -> None:
+        self._name = value
+
+
+    def get_legs(self) -> int:
+        return self._legs
+    def set_legs(self, value: int) -> None:
+        if value >= 0:
+            self._legs = value
+        else:
+            raise ValueError("Il numero di zampe non può essere negativo.")
+
+
+
+a1: Animal = Animal("Cane", 4)
+
+print(f"\ta1 name: {a1.get_name()}")
+
+a2: Animal = Animal("Millepiedi", 1000)
+
+print(f"\n\ta2 name: {a2.get_name()}")
+
+a2.set_legs(100)
+
+print(f"\n{a2.get_all()}")
 
 print("\n") # Formatting
 # ----------------------------------------------------------------------------
