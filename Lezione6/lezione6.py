@@ -1,7 +1,7 @@
 # Simone Antonelli
 # 17/04/2024
 
-print("Hello World!")
+print("\nHello World!")
 
 print("\n") # Formatting
 
@@ -90,12 +90,12 @@ class Person:
 
     def compute_name_surname(self, name: str, surname: str) -> str:
 
-        first_6: str = self.extract_surname(surname) + self.extract_name(name)
+        first_6: str = self.extract_surname_code(surname) + self.extract_name_code(name)
 
         return first_6
 
 
-    def extract_surname(self, surname: str) -> str:
+    def extract_surname_code(self, surname: str) -> str:
         surname = surname.replace(" ", "").upper()
     
         surname_consonants = re.findall(r'[BCDFGHJKLMNPQRSTVWXYZ]', surname)
@@ -111,7 +111,7 @@ class Person:
         return ''.join(surname_consonants[:3])
 
 
-    def extract_name(self, name: str) -> str:
+    def extract_name_code(self, name: str) -> str:
         name = name.replace(" ", "").upper()
 
         name_consonants = re.findall(r'[BCDFGHJKLMNPQRSTVWXYZ]', name)
@@ -366,13 +366,16 @@ a1: Animal = Animal("Cane", 4)
 
 print(f"\ta1 name: {a1.get_name()}")
 
+
 a2: Animal = Animal("Millepiedi", 1000)
 
 print(f"\n\ta2 name: {a2.get_name()}")
 
 a2.set_legs(100)
 
-print(f"\n{a2.get_all()}")
+print("\n\tEdited a2 legs number new value:")
+
+print(f"{a2.get_all()}")
 
 print("\n") # Formatting
 # ----------------------------------------------------------------------------

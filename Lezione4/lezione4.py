@@ -1,7 +1,7 @@
 # Simone Antonelli
 # 17/04/2024
 
-print("Hello World!")
+print("\nHello World!")
 
 print("\n") # Formatting
 
