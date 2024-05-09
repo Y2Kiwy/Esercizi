@@ -108,7 +108,7 @@ class Person:
 
         name_consonants = re.findall(r'[BCDFGHJKLMNPQRSTVWXYZ]', name)
 
-        if len(name_consonants) > 4:
+        if len(name_consonants) >= 4:
             return ''.join([name_consonants[0], name_consonants[2], name_consonants[3]])
         
         elif len(name_consonants) == 3:
@@ -160,7 +160,7 @@ class Person:
     
 
     def compute_cadastral_code(self, birth_place: str) -> str:
-        cadastral_codes: pd.DataFrame = pd.read_csv("/home/simone/VSCodeProject/Esercizi/Lezione6/gi_db_comuni-2024-04-10-a9b29/csv/gi_comuni_nazioni_cf.csv", delimiter=';')
+        cadastral_codes: pd.DataFrame = pd.read_csv("/home/user/VSCodeProjects/Esercizi/Lezione6/gi_db_comuni-2024-04-10-a9b29/csv/gi_comuni_nazioni_cf.csv", delimiter=';')
 
         city_name_corrispondency = cadastral_codes[cadastral_codes['denominazione_ita'] == birth_place.upper()]
 
@@ -172,6 +172,7 @@ class Person:
     def compute_control(self, digits_15: str) -> str:
 
         even_nums: dict = {
+            " ": " ",
             'A': 0,
             'B': 1,
             'C': 2,
@@ -211,9 +212,10 @@ class Person:
         }
 
         odd_nums = {
+            " ": " ",
             'A': 1,
             'B': 0,
-            'C': 3,
+            'C': 5,
             'D': 7,
             'E': 9,
             'F': 13,
@@ -223,7 +225,7 @@ class Person:
             'J': 21,
             '0': 1,
             '1': 0,
-            '2': 3,
+            '2': 5,
             '3': 7,
             '4': 9,
             '5': 13,
@@ -278,43 +280,44 @@ class Person:
             25: 'Z'
         }
 
+        digits_15: str = " " + digits_15
+
         digits_num_sum: int = 0
 
-        for i in range(0, len(digits_15)):
+        for i in range(1, len(digits_15)):
 
-            if i % 2:
+            if i % 2 == 0:
                 digits_num_sum += even_nums[digits_15[i]]
+                #print(f"\tChar {digits_15[i]} in position {i} (even) has a value of {even_nums[digits_15[i]]}")
 
             else:
                 digits_num_sum += odd_nums[digits_15[i]]
+                #print(f"\tChar {digits_15[i]} in position {i} (odd) has a value of {odd_nums[digits_15[i]]}")
+
 
         control_digits_id: int = digits_num_sum % 26
+
+        #print(f"\n\tDigits relative value sum: {digits_num_sum} % 26 = {control_digits_id}")
 
         return control_digits[control_digits_id]
 
 
+# p1: Person = Person("Simone", "Antonelli", "2004-08-17", "Roma", "Male")
 
-p1: Person = Person("Simone", "Antonelli", "2004-08-17", "Roma", "Male")
+# print(f"\tThe ssn for {p1.get_name()} {p1.get_surname()} is: {p1.get_ssn()}")
 
-print(f"\tThe ssn for {p1.get_name()} {p1.get_surname()} is: {p1.get_ssn()}")
+# p1.set_name("Sophia")
+# p1.set_birth_date("2031-06-18")
+# p1.set_gender("f")
 
-p1.set_name("Sophia")
-p1.set_birth_date("2031-06-18")
-p1.set_gender("f")
-
-print(f"\tThe ssn for {p1.get_name()} {p1.get_surname()} is: {p1.get_ssn()}")
-
+# print(f"\tThe ssn for edited person {p1.get_name()} {p1.get_surname()} is: {p1.get_ssn()}")
 
 
-p2: Person = Person("Alessandra", "Minniti", "1965-01-06", "Roma", "Famale")
+
+p2: Person = Person("Leonardo", "Brussani", "2004-07-24", "Roma", "male")
 
 print(f"\n\tThe ssn for {p2.get_name()} {p2.get_surname()} is: {p2.get_ssn()}")
 
-
-
-p3: Person = Person("Gaia", "Papotto", "2004-01-18", "Aprilia", "FEMALE")
-
-print(f"\n\tThe ssn for {p3.get_name()} {p3.get_surname()} is: {p3.get_ssn()}")
 
 print("\n") # Formatting
 # ----------------------------------------------------------------------------
