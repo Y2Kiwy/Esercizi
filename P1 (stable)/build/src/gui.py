@@ -23,7 +23,7 @@ from functions import *
 # Create the path to the database and check if it exist
 DB_PATH = DBF_PATH / "transactions.db"
 if not DB_PATH.exists():
-    initialize_db("transactions1", 1_000) # type: ignore
+    initialize_db("transactions_history", 1_000) # type: ignore
 
 # Build assets path
 def relative_to_assets(path: str) -> Path:
@@ -47,12 +47,12 @@ def submit_transaction() -> None:
 
     hidden_code_handler(newT_name)
     
-    last_balance_raw: list[tuple] = collect_balance("transactions1") # type: ignore
+    last_balance_raw: list[tuple] = collect_balance("transactions_history") # type: ignore
     last_balance: float = last_balance_raw[0]
 
     # Check if the transaction amount is positive (income)
     if newT_amount > 0:
-        total_income_raw: float = collect_income_total("transactions1") # type: ignore
+        total_income_raw: float = collect_income_total("transactions_history") # type: ignore
         total_income: float = [float(value[0]) for value in total_income_raw]
         total_income: float = sum(total_income)
         # If positive, add it to the transaction income
@@ -62,7 +62,7 @@ def submit_transaction() -> None:
 
     # Check if the transaction amount is negative (expense)
     elif newT_amount < 0:
-        total_expense_raw: float = collect_expense_total("transactions1") # type: ignore
+        total_expense_raw: float = collect_expense_total("transactions_history") # type: ignore
         total_expense: float = [float(value[0]) for value in total_expense_raw]
         total_expense: float = sum(total_expense)
         # If negative, add it to the transaction expense
@@ -77,7 +77,7 @@ def submit_transaction() -> None:
     canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
 
     # Add the new transaction to the database
-    add_transaction(table="transactions1", name=newT_name, amount=newT_amount, date=newT_date) # type: ignore
+    add_transaction(table="transactions_history", name=newT_name, amount=newT_amount, date=newT_date) # type: ignore
 
 
 
@@ -171,7 +171,7 @@ canvas.create_text(
     font=("Ubuntu", 12 * -1, "bold")
 )
 
-total_income_raw: float = collect_income_total("transactions1") # type: ignore
+total_income_raw: float = collect_income_total("transactions_history") # type: ignore
 total_income: float = [float(value[0]) for value in total_income_raw]
 total_income: float = sum(total_income)
 income = canvas.create_text(
@@ -183,7 +183,7 @@ income = canvas.create_text(
     font=("Ubuntu", 24 * -1, "bold")
 )
 
-last_balance_raw: list[tuple] = collect_balance("transactions1") # type: ignore
+last_balance_raw: list[tuple] = collect_balance("transactions_history") # type: ignore
 last_balance: float = last_balance_raw[0]
 balance = canvas.create_text(
     72.0,
@@ -194,7 +194,7 @@ balance = canvas.create_text(
     font=("Ubuntu", 24 * -1, "bold")
 )
 
-total_expense_raw: float = collect_expense_total("transactions1") # type: ignore
+total_expense_raw: float = collect_expense_total("transactions_history") # type: ignore
 total_expense: float = [float(value[0]) for value in total_expense_raw]
 total_expense: float = sum(total_expense)
 expense = canvas.create_text(

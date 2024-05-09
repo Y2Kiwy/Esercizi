@@ -64,7 +64,7 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
-#add_transaction("transactions1", "Spesa", 138.76, "06/05/2024 16:34:45")
+#add_transaction("transactions_history", "Spesa", 138.76, "06/05/2024 16:34:45")
 
 
 def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new_value: str) -> None:
@@ -127,7 +127,7 @@ def delete_transaction(table: str, primary_key: str) -> None:
     conn.close()
 '''
 for x in range(1, 10):
-    delete_transaction("transactions1", x)
+    delete_transaction("transactions_history", x)
 '''
 
 
@@ -157,7 +157,7 @@ def collect_income_total(table: str) -> list[tuple]:
     conn.close()
     
     return data
-# db_data_raw: list[tuple] = collect_income_total(table="transactions1")
+# db_data_raw: list[tuple] = collect_income_total(table="transactions_history")
 # db_data = [int(value[0]) for value in db_data_raw]
 # print(db_data)
 
@@ -188,7 +188,7 @@ def collect_expense_total(table: str) -> list[tuple]:
     conn.close()
     
     return data
-# db_data_raw: list[tuple] = collect_expense_total(table="transactions1")
+# db_data_raw: list[tuple] = collect_expense_total(table="transactions_history")
 # db_data = [int(value[0]) for value in db_data_raw]
 # print(db_data)
 

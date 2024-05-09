@@ -1,6 +1,4 @@
-__pycache__/
 .venv
 .vscode
-Tkinter-Designer
+__pycache__/
 transactions.db
-to do.md

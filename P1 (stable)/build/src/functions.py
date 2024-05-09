@@ -30,7 +30,7 @@ def hidden_code_handler(code_str: str) -> None:
 # Function to handle hidden code related to balance
 def balance_hidden_code(code_str: str) -> None:
     # Count the number of rows in the transactions table in the database
-    db_rows: int = count_item("transactions1")
+    db_rows: int = count_item("transactions_history")
     print(f"Checking if the database is empty...")
 
     # If there is only one row in the database
@@ -38,7 +38,7 @@ def balance_hidden_code(code_str: str) -> None:
         # Extract the new balance from the code string
         new_balance: int = int(code_str.split(":")[1])
         # Edit the 'balance' attribute of the first transaction in the database
-        edit_transaction_attribute("transactions1", "balance", 1, new_balance)
+        edit_transaction_attribute("transactions_history", "balance", 1, new_balance)
         print(f"Attribute 'balance' edited correctly to {new_balance}")
     else:
         # If the database is not empty, print a message indicating failure
@@ -57,14 +57,14 @@ def generate_pdf_from_db() -> None:
     cursor = conn.cursor()
 
     # Execute a query to select data from the table
-    cursor.execute("SELECT * FROM transactions1;")
+    cursor.execute("SELECT * FROM transactions_history;")
     rows = cursor.fetchall()
 
     # Close the connection
     conn.close()
 
     # Create the PDF document
-    pdf_path = "transactions1.pdf"
+    pdf_path = "transactions_history.pdf"
     doc = SimpleDocTemplate(pdf_path, pagesize=letter)
     data = []
 

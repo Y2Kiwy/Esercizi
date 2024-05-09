@@ -9,8 +9,7 @@ DB_PATH = PROJECT_DIR / "build" / "data" / "transactions.db" # Database path
 import sqlite3
 
 
-
-def initialize_db(table: str, balance: float) -> None:
+def initialize_db(txn_table: str, balance_table:str, balance: float) -> None:
     # Connect to the SQLite database using the provided DB_PATH
     conn = sqlite3.connect(DB_PATH)
 
@@ -18,11 +17,15 @@ def initialize_db(table: str, balance: float) -> None:
     c = conn.cursor()
 
     # Create the table if it doesn't exist, with columns id, name, amount, date, and balance
-    c.execute(f'''CREATE TABLE IF NOT EXISTS {table}
-                (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT, balance REAL)''')
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {txn_table}
+                (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT)''')
+    
+    # Create the table if it doesn't exist, with columns id, name, amount, date, and balance
+    c.execute(f'''CREATE TABLE IF NOT EXISTS {balance_table}
+                (id INTEGER PRIMARY KEY, balance REAL)''')
 
     # Insert a new row into the table with the provided name, amount, date, and balance
-    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", ("Start balance", None, None, balance))
+    c.execute(f"INSERT INTO {balance_table} (balance) VALUES (?)", (balance,))
 
     # Commit the changes to the database
     conn.commit()
@@ -32,11 +35,13 @@ def initialize_db(table: str, balance: float) -> None:
     conn.close()
 
 
-def add_transaction(table: str, name: str, amount: float, date: str) -> None:
+def add_transaction(txn_table: str, balance_table: str, name: str, amount: float, date: str) -> None:
     """
     Add a transaction to the database.
 
     Parameters:
+    - txn_table (str): The name of the table that stores the transactions
+    - balance_table (str): The name of the table that stores the balance variations
     - name (str): The name of the transaction.
     - amount (float): The amount of the transaction.
     - date (str): The date and time of the transaction in the format 'YYYY-MM-DD HH:MM:SS'.
@@ -48,7 +53,7 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
         return
     
     # Extract last knowkn balance
-    balance_last: float = collect_balance("transactions1")
+    balance_last: float = collect_balance("balance_history")
 
     # Update the balance adding the transaction amount
     new_balance = balance_last + amount
@@ -60,7 +65,14 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     c = conn.cursor()
 
     # Insert a new row into the table with the provided name, amount and date
-    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (name, f"{amount:.2f}", date, f"{new_balance:.2f}"))
+    c.execute(f"INSERT INTO {txn_table} (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:.2f}", date))
+
+    balance_last: float = collect_balance("balance_history")
+
+    new_balance: float = balance_last + amount
+
+    # Insert a new row into the table with the provided name, amount and date
+    c.execute(f"INSERT INTO {balance_table} (balance) VALUES (?)", (new_balance,))
 
     # Commit the changes to the database
     conn.commit()
@@ -68,7 +80,6 @@ def add_transaction(table: str, name: str, amount: float, date: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
-#add_transaction("transactions1", "Spesa", 138.76, "06/05/2024 16:34:45")
 
 
 def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new_value: str) -> None:
@@ -129,10 +140,6 @@ def delete_transaction(table: str, primary_key: str) -> None:
     # Close the cursor and the connection
     c.close()
     conn.close()
-'''
-for x in range(1, 10):
-    delete_transaction("transactions1", x)
-'''
 
 
 def collect_income_total(table: str) -> float:
@@ -167,9 +174,6 @@ def collect_income_total(table: str) -> float:
     income_total: float = sum(data_row_l)
     
     return income_total
-# db_data_raw: list[tuple] = collect_income_total(table="transactions1")
-# db_data = [int(value[0]) for value in db_data_raw]
-# print(db_data_raw)
 
 
 def collect_expense_total(table: str) -> float:
@@ -204,9 +208,6 @@ def collect_expense_total(table: str) -> float:
     expense_total: float = sum(data_row_l)
 
     return expense_total
-# db_data_raw: list[tuple] = collect_expense_total(table="transactions1")
-# db_data = [int(value[0]) for value in db_data_raw]
-# print(db_data)
 
 
 def collect_balance(table: str) -> float:
@@ -229,16 +230,13 @@ def collect_balance(table: str) -> float:
     c.execute(f"SELECT balance FROM {table} ORDER BY id DESC LIMIT 1")
     
     # Fetch the results in a list of tuple (lt)
-    data_row_lt: list[tuple] = c.fetchall()
+    data_row_lt: list[tuple] = c.fetchone()
     
     # Close the connection
     conn.close()
 
-    # Convert fetched data in a list of float (l)
-    data_row_l: list = [float(value[0]) for value in data_row_lt]
-
-    # Sum all the expense
-    balance: float = data_row_l[0]
+    # Convert fetched data from list[tuple] in a float
+    balance: float = data_row_lt[0]
 
     return balance
 

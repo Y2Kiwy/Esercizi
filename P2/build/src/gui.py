@@ -13,7 +13,7 @@ from dbf import *
 
 # Check if the database exists to initialize it if not
 if not DB_PATH.exists():
-    initialize_db("transactions1", 1_000)
+    initialize_db("transactions_history", "balance_history", 0)
 
 from functions import *
 
@@ -21,14 +21,20 @@ from functions import *
 def submit_transaction() -> None:
 
     # Get values from texboxes and normalize it
-    txn_name, txn_amount, txn_date = normalize_textbox_values(name_textbox.get(), amount_textbox.get(), date_textbox.get())
+    txn_data: tuple = normalize_textbox_values(name_textbox.get(), amount_textbox.get(), date_textbox.get())
 
-    print(f"\nCollected: \n\t{txn_name} {type(txn_name)}\n\t{txn_amount} {type(txn_amount)}\n\t{txn_date} {type(txn_date)}")
+    # Extract transaction value
+    txn_name: str = txn_data[0]
+    txn_amount: float = txn_data[1]
+    txn_date: datetime = txn_data[2]
+
+    #txn_name, txn_amount, txn_date
+    print(f"\nCollected data from transaction:\n\t{txn_name} {type(txn_name)}\n\t{txn_amount} {type(txn_amount)}\n\t{txn_date} {type(txn_date)}")
 
     # Collect income and expense total and the last known balance
-    income_total: float = collect_income_total("transactions1")
-    balance_last: float = collect_balance("transactions1")
-    expense_total: float = collect_expense_total("transactions1")
+    income_total: float = collect_income_total("transactions_history")
+    balance_last: float = collect_balance("balance_history")
+    expense_total: float = collect_expense_total("transactions_history")
 
     # Check if 'txn_amount' is not empty
     if txn_amount:
@@ -54,9 +60,24 @@ def submit_transaction() -> None:
         canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
 
         # Add the new transaction to the database
-        add_transaction(table="transactions1", name=txn_name, amount=txn_amount, date=txn_date)
+        add_transaction(txn_table="transactions_history", balance_table="balance_history", name=txn_name, amount=txn_amount, date=txn_date)
 
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+    update_texts()
+
+def update_texts() -> None:
+    income_total: float = collect_income_total("transactions_history")
+    canvas.itemconfig(tagOrId=income, text=f"{income_total:,.2f}€")
+
+    balance_last: float = collect_balance("balance_history")
+    canvas.itemconfig(tagOrId=balance, text=f"{balance_last:,.2f}€")
+
+    expense_total: float = collect_expense_total("transactions_history")
+    canvas.itemconfig(tagOrId=expense, text=f"{expense_total:,.2f}€")
+
+    print("value updator called")
+    
+
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
 
 # Start of GUI ----------------------------------------------------------------
 
@@ -172,31 +193,35 @@ canvas.create_text(
 )
 
 # 'income' value text
+income_total: float = collect_income_total("transactions_history")
 income = canvas.create_text(
     72.0,
     152.0,
     anchor="nw",
-    text=f"0€",
+    text=f"{income_total:.2f}€",
     fill="#4F4500",
     font=("Ubuntu", 24 * -1, "bold")
 )
 
 # 'balance' value text
+balance_last: float = collect_balance("balance_history")
+print(f"COLLECT_BALANCA CALLED: {balance_last}")
 balance = canvas.create_text(
     72.0,
     232.0,
     anchor="nw",
-    text=f"0€",
+    text=f"{balance_last:.2f}€",
     fill="#0A4B00",
     font=("Ubuntu", 24 * -1, "bold")
 )
 
 # 'expenses' value text
+expense_total: float = collect_expense_total("transactions_history")
 expense = canvas.create_text(
     360.0,
     152.0,
     anchor="nw",
-    text=f"0€",
+    text=f"{expense_total:.2f}€",
     fill="#660000",
     font=("Ubuntu", 24 * -1, "bold")
 )
@@ -341,14 +366,7 @@ settings_button.place(
     height=16.0
 )
 
-income_total: float = collect_income_total("transactions1")
-canvas.itemconfig(tagOrId=income, text=f"{income_total:,.2f}€")
 
-balance_last: float = collect_balance("transactions1")
-canvas.itemconfig(tagOrId=balance, text=f"{balance_last:,.2f}€")
-
-expense_total: float = collect_expense_total("transactions1")
-canvas.itemconfig(tagOrId=expense, text=f"{expense_total:,.2f}€")
 
 # Deactivate window resize
 window.resizable(False, False) 
