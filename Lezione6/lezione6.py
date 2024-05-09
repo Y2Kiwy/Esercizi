@@ -10,6 +10,10 @@ print("\n") # Formatting
 # Teoria ---------------------------------------------------------------------
 import re
 import pandas as pd
+from pathlib import Path
+
+CSV_PATH = Path(__file__).parent / "gi_db_comuni-2024-04-10-a9b29" / "csv"
+
 
 print("Theory: 1. Classes ↓\n")
 
@@ -160,7 +164,7 @@ class Person:
     
 
     def compute_cadastral_code(self, birth_place: str) -> str:
-        cadastral_codes: pd.DataFrame = pd.read_csv("/home/user/VSCodeProjects/Esercizi/Lezione6/gi_db_comuni-2024-04-10-a9b29/csv/gi_comuni_nazioni_cf.csv", delimiter=';')
+        cadastral_codes: pd.DataFrame = pd.read_csv(CSV_PATH / "gi_comuni_nazioni_cf.csv", delimiter=';')
 
         city_name_corrispondency = cadastral_codes[cadastral_codes['denominazione_ita'] == birth_place.upper()]
 
