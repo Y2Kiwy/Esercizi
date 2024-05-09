@@ -36,8 +36,16 @@ def normalize_textbox_values(txn_name: str, txn_amount: str, txn_date: str):
 
     # Normalize 'txn_date' to datetime if not empty
     if txn_date != "":
-        print("'txn_date is not empty")
-        txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d %H:%M")
+        try:
+            print("'txn_date is not empty")
+            txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d %H:%M")
+
+        except ValueError:
+            print("'txn_date is not with '%Y-%m-%d %H:%M' format trying '%Y-%m-%d'")
+            txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d").date()
+
+
+
 
     # Return the normalized values of transaction name, amount, and date
     return txn_name, txn_amount, txn_date

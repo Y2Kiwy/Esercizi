@@ -22,7 +22,7 @@ def initialize_db(table: str, balance: float) -> None:
                 (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT, balance REAL)''')
 
     # Insert a new row into the table with the provided name, amount, date, and balance
-    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", (None, None, None, balance))
+    c.execute(f"INSERT INTO {table} (name, amount, date, balance) VALUES (?, ?, ?, ?)", ("Start balance", None, None, balance))
 
     # Commit the changes to the database
     conn.commit()

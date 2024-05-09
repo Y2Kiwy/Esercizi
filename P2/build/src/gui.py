@@ -23,7 +23,7 @@ def submit_transaction() -> None:
     # Get values from texboxes and normalize it
     txn_name, txn_amount, txn_date = normalize_textbox_values(name_textbox.get(), amount_textbox.get(), date_textbox.get())
 
-    print(f"Collected: \n\t{txn_name} {type(txn_name)}\n\t{txn_amount} {type(txn_amount)}\n\t{txn_date} {type(txn_date)}")
+    print(f"\nCollected: \n\t{txn_name} {type(txn_name)}\n\t{txn_amount} {type(txn_amount)}\n\t{txn_date} {type(txn_date)}")
 
     # Collect income and expense total and the last known balance
     income_total: float = collect_income_total("transactions1")
