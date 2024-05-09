@@ -24,28 +24,47 @@ def normalize_textbox_values(txn_name: str, txn_amount: str, txn_date: str) -> t
     Returns:
     - str, float, datetime: The three values normalized
     """
-    # Check for hidden code in 'txn_name'
-    if txn_name != "":
-        print("'txn_name is not empty")
-        hidden_code_handler(txn_name)
+    # Define the placeholder for the texboxes
+    name_placeholder: str = "e.g. -> Shopping"
+    amount_placeholder: str = "e.g. -> -18.06"
+    date_placeholder: str = "e.g. -> 2024-01-01"
 
-    # Normalize 'txn_amount' to float if not empty
-    if txn_amount != "":
-        print("'txn_amount is not empty")
-        txn_amount: float = float(txn_amount.replace(",", "."))
+    # Initialize a list for valid transaction data
+    txn_valid_data: list[str] = [None, None, None]
 
-    # Normalize 'txn_date' to datetime if not empty
-    if txn_date != "":
-        try:
-            print("'txn_date is not empty")
-            txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d %H:%M")
+    # Check if 'txn_name' value is not the placeholder
+    if txn_name != name_placeholder:
+        # Check for hidden code in 'txn_name'
+        if txn_name != "":
+            print("'txn_name is not empty")
+            hidden_code_handler(txn_name)
+            txn_valid_data[0] = txn_name
 
-        except ValueError:
-            print("'txn_date is not with '%Y-%m-%d %H:%M' format trying '%Y-%m-%d'")
-            txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d").date()
+    # Check if 'txn_amount' value is not the placeholder
+    if txn_amount != amount_placeholder:
+        # Normalize 'txn_amount' to float if not empty
+        if txn_amount != "":
+            print("'txn_amount is not empty")
+            txn_amount: float = float(txn_amount.replace(",", "."))
+            txn_valid_data[1] = txn_amount
 
-    # Return the normalized values of transaction name, amount, and date
-    return (txn_name, txn_amount, txn_date)
+    # Check if 'txn_date' value is not the placeholder
+    if txn_date != date_placeholder:
+        # Normalize 'txn_date' to datetime if not empty
+        if txn_date != "":
+            try:
+                print("'txn_date is not empty")
+                txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d %H:%M")
+                txn_valid_data[2] = txn_date
+
+            except ValueError:
+                print("'txn_date is not with '%Y-%m-%d %H:%M' format trying '%Y-%m-%d'")
+                txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d").date()
+                txn_valid_data[2] = txn_date
+
+    # Return a tuple with the valid transaction data
+    return tuple(txn_valid_data)
+
 
 
 # Build assets path
@@ -60,16 +79,26 @@ def hidden_code_handler(code_str: str) -> None:
     delete_id: str = "!delete:"
     edit_id: str = "!edit:"
     pdf_id: str = "!pdf:"
+    bug_id: str = "!bug:"
 
-    # Check if the string contains the balance_id
+    # Check if the string contains the 'balance_id'
     if balance_id in code_str:
         # If so, call the balance_hidden_code function
         print(f"Label 'name' contains '!balance:' hidden code, calling 'balance_hidden_code()'...")
         balance_hidden_code(code_str)
+
+    # Check if the string contains the 'pdf_id'
     elif pdf_id in code_str:
-        # If so, call the generate_pdf_from_db function
-        print(f"Label 'name' contains '!pdf:' hidden code, calling 'generate_pdf_from_db()'...")
-        generate_pdf_from_db()
+        # If so, call the pdf_hidden_code function
+        print(f"Label 'name' contains '!pdf:' hidden code, calling 'pdf_hidden_code()'...")
+        pdf_hidden_code()
+
+    # Check if the string contains the 'bug_id'
+    elif bug_id in code_str:
+        # If so, call the bug_hidden_code function
+        print(f"Label 'name' contains '!bug:' hidden code, calling 'bug_hidden_code()'...")
+        bug_hidden_code(code_str)
+
 
 # Function to handle hidden code related to balance
 def balance_hidden_code(code_str: str) -> None:
@@ -80,7 +109,7 @@ def balance_hidden_code(code_str: str) -> None:
     # If there is only one row in the database
     if db_rows == 1:
         # Extract the new balance from the code string
-        new_balance: int = int(code_str.split(":")[1])
+        new_balance: float = float(code_str.split(":")[1])
         # Edit the 'balance' attribute of the first transaction in the database
         edit_transaction_attribute("balance_history", "balance", 1, new_balance)
         print(f"Attribute 'balance' edited correctly to {new_balance}")
@@ -88,14 +117,13 @@ def balance_hidden_code(code_str: str) -> None:
         # If the database is not empty, print a message indicating failure
         print(f"The database is not empty ({db_rows}) or do not exist, failed to edit 'balance'")
 
-
 import sqlite3
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table
 
-# Generate a PDF file with all the database transactions
-def generate_pdf_from_db() -> None:
+# Function to handle hidden code related to generate a pdf copy of database transactions
+def pdf_hidden_code() -> None:
     # Connect to the SQLite database
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -135,3 +163,19 @@ def generate_pdf_from_db() -> None:
     doc.build([table])
 
     print("PDF file successfully created:", pdf_path)
+
+
+# Function to handle hidden code related to bugs report
+def bug_hidden_code(code_str) -> None:
+
+    # Extract the bug description from the code string
+    bug_description: str = code_str.split(":")[1]
+
+    # Get current datetime
+    bug_date_raw = datetime.now()
+
+    # Format current datetime in '%Y-%M-%d %H:%M'
+    bug_date = bug_date_raw.strftime('%Y-%M-%d %H:%M')
+
+    # Add bug data into the 'bugs' table of database
+    add_bug(bug_description, bug_date)

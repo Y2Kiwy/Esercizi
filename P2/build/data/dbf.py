@@ -16,13 +16,17 @@ def initialize_db(txn_table: str, balance_table:str, balance: float) -> None:
     # Create a cursor object to execute SQLite statements
     c = conn.cursor()
 
-    # Create the table if it doesn't exist, with columns id, name, amount, date, and balance
+    # Create the table {txn_table} if it doesn't exist, with columns id, name, amount and date
     c.execute(f'''CREATE TABLE IF NOT EXISTS {txn_table}
                 (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT)''')
     
-    # Create the table if it doesn't exist, with columns id, name, amount, date, and balance
+    # Create the table {balance_table} if it doesn't exist, with columns id and balance
     c.execute(f'''CREATE TABLE IF NOT EXISTS {balance_table}
                 (id INTEGER PRIMARY KEY, balance REAL)''')
+    
+    # Create the table 'bugs' if it doesn't exist, with columns id and balance
+    c.execute(f'''CREATE TABLE IF NOT EXISTS bugs
+                (id INTEGER PRIMARY KEY, description TEXT, date TEXT)''')
 
     # Insert a new row into the table with the provided name, amount, date, and balance
     c.execute(f"INSERT INTO {balance_table} (balance) VALUES (?)", (balance,))
@@ -267,3 +271,32 @@ def count_item(table: str) -> int:
     conn.close()
     
     return rows
+
+
+def add_bug(description: str, date: str) -> None:
+    """
+    Add a bug to the database.
+
+    Parameters:
+    - description (str): The description of the bug.
+    - date (str): The date and time of the bug report.
+
+    Returns:
+    - None
+    """
+
+    # Connect to the SQLite database using the provided DB_PATH
+    conn = sqlite3.connect(DB_PATH)
+
+    # Create a cursor object to execute SQLite statements
+    c = conn.cursor()
+
+    # Insert a new row into the table with the provided description and date
+    c.execute(f"INSERT INTO bugs (description, date) VALUES (?, ?)", (description, date))
+
+    # Commit the changes to the database
+    conn.commit()
+
+    # Close the cursor and the connection
+    c.close()
+    conn.close()

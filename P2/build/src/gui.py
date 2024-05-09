@@ -29,7 +29,7 @@ def submit_transaction() -> None:
     txn_date: datetime = txn_data[2]
 
     #txn_name, txn_amount, txn_date
-    print(f"\nCollected data from transaction:\n\t{txn_name} {type(txn_name)}\n\t{txn_amount} {type(txn_amount)}\n\t{txn_date} {type(txn_date)}")
+    print(f"Collected data from transaction:\n\ttxn_name = {txn_name} type: {type(txn_name)}\n\ttxn_amount = {txn_amount} type: {type(txn_amount)}\n\ttxn_date = {txn_date} type: {type(txn_date)}")
 
     # Collect income and expense total and the last known balance
     income_total: float = collect_income_total("transactions_history")
@@ -74,10 +74,9 @@ def update_texts() -> None:
     expense_total: float = collect_expense_total("transactions_history")
     canvas.itemconfig(tagOrId=expense, text=f"{expense_total:,.2f}€")
 
-    print("value updator called")
-    
 
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
+
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 # Start of GUI ----------------------------------------------------------------
 
@@ -205,7 +204,6 @@ income = canvas.create_text(
 
 # 'balance' value text
 balance_last: float = collect_balance("balance_history")
-print(f"COLLECT_BALANCA CALLED: {balance_last}")
 balance = canvas.create_text(
     72.0,
     232.0,
@@ -265,6 +263,22 @@ canvas.create_text(
     fill="#6682AD",
     font=("Ubuntu", 12 * -1, "bold")
 )
+
+
+
+# Function to handle placeholders behaviour on click
+def on_entry_click(event, textbox, placeholder):
+    if textbox.get() == placeholder:
+        textbox.delete(0, "end")
+        textbox.config(fg='black')
+
+
+# Function to handle placeholders behaviour on click release
+def on_focus_out(event, textbox, placeholder):
+    if not textbox.get():
+        textbox.insert(0, placeholder)
+        textbox.config(fg='#848484')
+
 
 
 # 'name' background rectangle, textbox
@@ -329,6 +343,32 @@ date_textbox.place(
     width=96.0,
     height=30.0
 )
+
+
+
+# FIX THIS AS SOON AS POSSIBLE
+# ----------------------------------------------------------------------------
+# Placeholder and event handling for the 'name' text box
+name_placeholder: str = "e.g. -> Shopping"  # Placeholder text
+name_textbox.insert(0, name_placeholder)  # Insert placeholder text
+name_textbox.config(fg='#848484')  # Set text color to grey
+name_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, name_textbox, name_placeholder))  # Bind event handler for focus in
+name_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, name_textbox, name_placeholder))  # Bind event handler for focus out
+
+# Placeholder and event handling for the 'amount' text box
+amount_placeholder: str = "e.g. -> -18.06"  # Placeholder text
+amount_textbox.insert(0, amount_placeholder)  # Insert placeholder text
+amount_textbox.config(fg='#848484')  # Set text color to grey
+amount_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, amount_textbox, amount_placeholder))  # Bind event handler for focus in
+amount_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, amount_textbox, amount_placeholder))  # Bind event handler for focus out
+
+# Placeholder and event handling for the 'date' text box
+date_placeholder: str = "e.g. -> 2024-01-01"  # Placeholder text
+date_textbox.insert(0, date_placeholder)  # Insert placeholder text
+date_textbox.config(fg='#848484')  # Set text color to grey
+date_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, date_textbox, date_placeholder))  # Bind event handler for focus in
+date_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, date_textbox, date_placeholder))  # Bind event handler for focus out
+# ----------------------------------------------------------------------------
 
 
 
