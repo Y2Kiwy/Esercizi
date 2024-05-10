@@ -165,7 +165,7 @@ def pdf_hidden_code() -> None:
     print("PDF file successfully created:", pdf_path)
 
 
-# Function to handle hidden code related to bugs report
+# Function to handle hidden code related to bugs_report report
 def bug_hidden_code(code_str) -> None:
 
     # Extract the bug description from the code string
@@ -177,5 +177,5 @@ def bug_hidden_code(code_str) -> None:
     # Format current datetime in '%Y-%M-%d %H:%M'
     bug_date = bug_date_raw.strftime('%Y-%M-%d %H:%M')
 
-    # Add bug data into the 'bugs' table of database
+    # Add bug data into the 'bugs_report' table of database
     add_bug(bug_description, bug_date)

@@ -29,7 +29,7 @@ def submit_transaction() -> None:
     txn_date: datetime = txn_data[2]
 
     #txn_name, txn_amount, txn_date
-    print(f"Collected data from transaction:\n\ttxn_name = {txn_name} type: {type(txn_name)}\n\ttxn_amount = {txn_amount} type: {type(txn_amount)}\n\ttxn_date = {txn_date} type: {type(txn_date)}")
+    print(f"Collected data from transaction:\n\ttxn_name = {txn_name} {type(txn_name)}\n\ttxn_amount = {txn_amount} {type(txn_amount)}\n\ttxn_date = {txn_date} {type(txn_date)}")
 
     # Collect income and expense total and the last known balance
     income_total: float = collect_income_total("transactions_history")
@@ -62,6 +62,7 @@ def submit_transaction() -> None:
         # Add the new transaction to the database
         add_transaction(txn_table="transactions_history", balance_table="balance_history", name=txn_name, amount=txn_amount, date=txn_date)
 
+    # Update all the shown texts
     update_texts()
 
 def update_texts() -> None:

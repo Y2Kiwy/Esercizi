@@ -24,8 +24,8 @@ def initialize_db(txn_table: str, balance_table:str, balance: float) -> None:
     c.execute(f'''CREATE TABLE IF NOT EXISTS {balance_table}
                 (id INTEGER PRIMARY KEY, balance REAL)''')
     
-    # Create the table 'bugs' if it doesn't exist, with columns id and balance
-    c.execute(f'''CREATE TABLE IF NOT EXISTS bugs
+    # Create the table 'bugs_report' if it doesn't exist, with columns id and balance
+    c.execute(f'''CREATE TABLE IF NOT EXISTS bugs_report
                 (id INTEGER PRIMARY KEY, description TEXT, date TEXT)''')
 
     # Insert a new row into the table with the provided name, amount, date, and balance
@@ -292,7 +292,7 @@ def add_bug(description: str, date: str) -> None:
     c = conn.cursor()
 
     # Insert a new row into the table with the provided description and date
-    c.execute(f"INSERT INTO bugs (description, date) VALUES (?, ?)", (description, date))
+    c.execute(f"INSERT INTO bugs_report (description, date) VALUES (?, ?)", (description, date))
 
     # Commit the changes to the database
     conn.commit()
