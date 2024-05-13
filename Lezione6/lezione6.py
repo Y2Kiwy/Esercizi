@@ -324,7 +324,7 @@ class Person:
 
 
 
-p2: Person = Person("Leonardo", "Brussani", "2004-07-24", "Roma", "male")
+p2: Person = Person("Francesco", "Bagnaia", "1997-01-14", "Chivasso", "M")
 
 print(f"\n\tThe ssn for {p2.get_name()} {p2.get_surname()} is: {p2.get_ssn()}")
 
@@ -336,46 +336,46 @@ print("\n") # Formatting
 
 # Teoria esercizio 3 ---------------------------------------------------------
 
-print("Theory exercise: 3. Animals ↓\n")
+# print("Theory exercise: 3. Animals ↓\n")
 
-class Animal:
-    def __init__(self, name: str, legs: int) -> None:
-        self._name = name
-        self._legs = legs
+# class Animal:
+#     def __init__(self, name: str, legs: int) -> None:
+#         self._name = name
+#         self._legs = legs
 
-    def get_all(self) -> str:
-        return f"\tObject name: {self._name}\n\tObject legs: {self._legs}"
+#     def get_all(self) -> str:
+#         return f"\tObject name: {self._name}\n\tObject legs: {self._legs}"
 
-    def get_name(self) -> str:
-        return self._name
-    def set_name(self, value: str) -> None:
-        self._name = value
-
-
-    def get_legs(self) -> int:
-        return self._legs
-    def set_legs(self, value: int) -> None:
-        if value >= 0:
-            self._legs = value
-        else:
-            raise ValueError("Il numero di zampe non può essere negativo.")
+#     def get_name(self) -> str:
+#         return self._name
+#     def set_name(self, value: str) -> None:
+#         self._name = value
 
 
+#     def get_legs(self) -> int:
+#         return self._legs
+#     def set_legs(self, value: int) -> None:
+#         if value >= 0:
+#             self._legs = value
+#         else:
+#             raise ValueError("Il numero di zampe non può essere negativo.")
 
-a1: Animal = Animal("Cane", 4)
-
-print(f"\ta1 name: {a1.get_name()}")
 
 
-a2: Animal = Animal("Millepiedi", 1000)
+# a1: Animal = Animal("Cane", 4)
 
-print(f"\n\ta2 name: {a2.get_name()}")
+# print(f"\ta1 name: {a1.get_name()}")
 
-a2.set_legs(100)
 
-print("\n\tEdited a2 legs number new value:")
+# a2: Animal = Animal("Millepiedi", 1000)
 
-print(f"{a2.get_all()}")
+# print(f"\n\ta2 name: {a2.get_name()}")
 
-print("\n") # Formatting
+# a2.set_legs(100)
+
+# print("\n\tEdited a2 legs number new value:")
+
+# print(f"{a2.get_all()}")
+
+# print("\n") # Formatting
 # ----------------------------------------------------------------------------

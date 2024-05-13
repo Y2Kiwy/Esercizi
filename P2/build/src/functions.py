@@ -6,6 +6,8 @@ ASSETS_DIR = PROJECT_DIR / "build" / "assets" / "frame0"     # Assets directory 
 DBF_PATH = PROJECT_DIR / "build" / "data"                    # Database functions lib directory
 DB_PATH = PROJECT_DIR / "build" / "data" / "transactions.db" # Database path
 
+import sys
+sys.path.append(str(DBF_PATH))
 from dbf import *
 
 from tkinter import *
@@ -36,7 +38,7 @@ def normalize_textbox_values(txn_name: str, txn_amount: str, txn_date: str) -> t
     if txn_name != name_placeholder:
         # Check for hidden code in 'txn_name'
         if txn_name != "":
-            print("'txn_name is not empty")
+            print("'txn_name correctly recovered")
             hidden_code_handler(txn_name)
             txn_valid_data[0] = txn_name
 
@@ -44,7 +46,7 @@ def normalize_textbox_values(txn_name: str, txn_amount: str, txn_date: str) -> t
     if txn_amount != amount_placeholder:
         # Normalize 'txn_amount' to float if not empty
         if txn_amount != "":
-            print("'txn_amount is not empty")
+            print("'txn_amount correctly recovered")
             txn_amount: float = float(txn_amount.replace(",", "."))
             txn_valid_data[1] = txn_amount
 
@@ -53,7 +55,7 @@ def normalize_textbox_values(txn_name: str, txn_amount: str, txn_date: str) -> t
         # Normalize 'txn_date' to datetime if not empty
         if txn_date != "":
             try:
-                print("'txn_date is not empty")
+                print("'txn_date correctly recovered")
                 txn_date: datetime = datetime.strptime(txn_date, "%Y-%m-%d %H:%M")
                 txn_valid_data[2] = txn_date
 
@@ -75,29 +77,43 @@ def asset_path_build(path: str) -> Path:
 # Function to handle hidden code in a string
 def hidden_code_handler(code_str: str) -> None:
     # Define special identifiers for specific actions
-    balance_id: str = "!balance:"
-    delete_id: str = "!delete:"
-    edit_id: str = "!edit:"
-    pdf_id: str = "!pdf:"
-    bug_id: str = "!bug:"
+    # balance_id: str = "!balance:"
+    # delete_id: str = "!delete:"
+    # edit_id: str = "!edit:"
+    # pdf_id: str = "!pdf:"
+    # bug_id: str = "!bug:"
 
-    # Check if the string contains the 'balance_id'
-    if balance_id in code_str:
-        # If so, call the balance_hidden_code function
-        print(f"Label 'name' contains '!balance:' hidden code, calling 'balance_hidden_code()'...")
-        balance_hidden_code(code_str)
+    # # Check if the string contains the 'balance_id'
+    # if balance_id in code_str:
+    #     # If so, call the balance_hidden_code function
+    #     print(f"Label 'name' contains '!balance:' hidden code, calling 'balance_hidden_code()'...")
+    #     balance_hidden_code(code_str)
 
-    # Check if the string contains the 'pdf_id'
-    elif pdf_id in code_str:
-        # If so, call the pdf_hidden_code function
-        print(f"Label 'name' contains '!pdf:' hidden code, calling 'pdf_hidden_code()'...")
-        pdf_hidden_code()
+    # # Check if the string contains the 'pdf_id'
+    # elif pdf_id in code_str:
+    #     # If so, call the pdf_hidden_code function
+    #     print(f"Label 'name' contains '!pdf:' hidden code, calling 'pdf_hidden_code()'...")
+    #     pdf_hidden_code()
 
-    # Check if the string contains the 'bug_id'
-    elif bug_id in code_str:
-        # If so, call the bug_hidden_code function
-        print(f"Label 'name' contains '!bug:' hidden code, calling 'bug_hidden_code()'...")
-        bug_hidden_code(code_str)
+    # # Check if the string contains the 'bug_id'
+    # elif bug_id in code_str:
+    #     # If so, call the bug_hidden_code function
+    #     print(f"Label 'name' contains '!bug:' hidden code, calling 'bug_hidden_code()'...")
+    #     bug_hidden_code(code_str)
+
+    hidden_codes: dict = {
+        "!balance:": balance_hidden_code,
+        "!edit:": None,
+        "!delete:": None,
+        "!pdf:": pdf_hidden_code,
+        "!bug:": bug_hidden_code
+    }
+
+    for code, function in hidden_codes.items():
+        if code in code_str:
+            print(f"Detected hidden code: '{code}' calling '{function}'...")
+            function(code_str)
+            break
 
 
 # Function to handle hidden code related to balance
@@ -109,13 +125,14 @@ def balance_hidden_code(code_str: str) -> None:
     # If there is only one row in the database
     if db_rows == 1:
         # Extract the new balance from the code string
-        new_balance: float = float(code_str.split(":")[1])
+        new_balance: float = float(code_str.split(":")[1].replace(",", "."))
         # Edit the 'balance' attribute of the first transaction in the database
         edit_transaction_attribute("balance_history", "balance", 1, new_balance)
+        edit_transaction_attribute("transactions_history", "amount", 1, new_balance)
         print(f"Attribute 'balance' edited correctly to {new_balance}")
     else:
         # If the database is not empty, print a message indicating failure
-        print(f"The database is not empty ({db_rows}) or do not exist, failed to edit 'balance'")
+        print(f"The database is not empty ({db_rows} rows found) or do not exist, failed to edit 'balance'")
 
 import sqlite3
 from reportlab.lib import colors
@@ -123,13 +140,13 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table
 
 # Function to handle hidden code related to generate a pdf copy of database transactions
-def pdf_hidden_code() -> None:
+def pdf_hidden_code(code_str: str) -> None:
     # Connect to the SQLite database
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     # Execute a query to select data from the table
-    cursor.execute("SELECT * FROM transactions_history;")
+    cursor.execute("SELECT * FROM transactions_history LIMIT -1 OFFSET 1;")
     rows = cursor.fetchall()
 
     # Close the connection

@@ -8,8 +8,12 @@ DB_PATH = PROJECT_DIR / "build" / "data" / "transactions.db" # Database path
 
 import sqlite3
 
+from datetime import datetime
+
 
 def initialize_db(txn_table: str, balance_table:str, balance: float) -> None:
+
+    print(f"Database do not exist in given path, initializing a new one...")
     # Connect to the SQLite database using the provided DB_PATH
     conn = sqlite3.connect(DB_PATH)
 
@@ -19,6 +23,15 @@ def initialize_db(txn_table: str, balance_table:str, balance: float) -> None:
     # Create the table {txn_table} if it doesn't exist, with columns id, name, amount and date
     c.execute(f'''CREATE TABLE IF NOT EXISTS {txn_table}
                 (id INTEGER PRIMARY KEY, name TEXT, amount REAL, date TEXT)''')
+    
+    # Get current datetime
+    initialize_db_date_raw = datetime.now()
+
+    # Format current datetime in '%Y-%M-%d'
+    initialize_db_date = initialize_db_date_raw.strftime('%Y-%M-%d')
+    
+    # Insert a new row into the table with the provided name, amount and date
+    c.execute(f"INSERT INTO {txn_table} (name, amount, date) VALUES (?, ?, ?)", ("Initialize balance", 0, initialize_db_date))
     
     # Create the table {balance_table} if it doesn't exist, with columns id and balance
     c.execute(f'''CREATE TABLE IF NOT EXISTS {balance_table}
@@ -69,7 +82,7 @@ def add_transaction(txn_table: str, balance_table: str, name: str, amount: float
     c = conn.cursor()
 
     # Insert a new row into the table with the provided name, amount and date
-    c.execute(f"INSERT INTO {txn_table} (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:.2f}", date))
+    c.execute(f"INSERT INTO {txn_table} (name, amount, date) VALUES (?, ?, ?)", (name, f"{amount:,.2f}", date))
 
     balance_last: float = collect_balance("balance_history")
 
@@ -101,14 +114,12 @@ def edit_transaction_attribute(table: str, attribute: str, primary_key: str, new
     """
     # Connect to the SQLite database using the provided DB_PATH
     conn = sqlite3.connect(DB_PATH)
-    print(f"Connection to DB estabilished")
 
     # Create a cursor object to execute SQLite statements
     c = conn.cursor()
 
     # Execute the SQL query to update the attribute using the primary key with parameters (new_value)
     c.execute(f"UPDATE {table} SET {attribute} = ? WHERE rowid = ?", (new_value, primary_key))
-    print(f"Executin query: UPDATE {table} SET {attribute} = ? WHERE rowid = ?", (new_value, primary_key))
 
     # Commit the changes to the database
     conn.commit()
@@ -163,7 +174,7 @@ def collect_income_total(table: str) -> float:
     c = conn.cursor()
 
     # Build the SQL query and execute it to select all income transactions
-    c.execute(f"SELECT amount FROM {table} WHERE amount > 0")
+    c.execute(f"SELECT amount FROM {table} WHERE amount > 0 LIMIT -1 OFFSET 1")
     
     # Fetch the results in a list of tuple (lt)
     data_row_lt: list[tuple] = c.fetchall()
@@ -242,7 +253,7 @@ def collect_balance(table: str) -> float:
     # Convert fetched data from list[tuple] in a float
     balance: float = data_row_lt[0]
 
-    return balance
+    return float(balance)
 
 
 def count_item(table: str) -> int:

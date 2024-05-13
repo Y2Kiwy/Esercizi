@@ -15,3 +15,15 @@ There are three working secret code that have to be writed in the 'name' texbox 
     - *!balance:x* Where x is the money amount you want to set balance **USE THIS CODE ONLY IF DB DO NOT EXIST (first time using the app)**
     - *!pdf:* That can generate a pdf file with all the transactions regitered
     - *!bug:x* Where x is the bug description, you can report bugs through this code
+
+
+
+
+
+
+**TO DO**
+1 - Create pdf in a more accesible location
+2 - Exclude first db row of 'transactions_history' table when creating pdf
+3 - Fix cannot use colon for decimals when settings new balance
+
+4 - Make possible to choose location where to create the file

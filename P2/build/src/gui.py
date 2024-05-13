@@ -8,7 +8,6 @@ DB_PATH = PROJECT_DIR / "build" / "data" / "transactions.db" # Database path
 
 import sys
 sys.path.append(str(DBF_PATH))
-
 from dbf import *
 
 # Check if the database exists to initialize it if not
@@ -28,8 +27,8 @@ def submit_transaction() -> None:
     txn_amount: float = txn_data[1]
     txn_date: datetime = txn_data[2]
 
-    #txn_name, txn_amount, txn_date
-    print(f"Collected data from transaction:\n\ttxn_name = {txn_name} {type(txn_name)}\n\ttxn_amount = {txn_amount} {type(txn_amount)}\n\ttxn_date = {txn_date} {type(txn_date)}")
+    if txn_name and txn_amount and txn_date:
+        print(f"New transaction registered: {txn_name}, {txn_amount:,.2f}, {txn_date}")
 
     # Collect income and expense total and the last known balance
     income_total: float = collect_income_total("transactions_history")
@@ -60,7 +59,7 @@ def submit_transaction() -> None:
         canvas.itemconfig(tagOrId=balance, text=f"{update_balance:,.2f}€")
 
         # Add the new transaction to the database
-        add_transaction(txn_table="transactions_history", balance_table="balance_history", name=txn_name, amount=txn_amount, date=txn_date)
+        add_transaction("transactions_history", "balance_history", txn_name, txn_amount, txn_date)
 
     # Update all the shown texts
     update_texts()
@@ -198,7 +197,7 @@ income = canvas.create_text(
     72.0,
     152.0,
     anchor="nw",
-    text=f"{income_total:.2f}€",
+    text=f"{income_total:,.2f}€",
     fill="#4F4500",
     font=("Ubuntu", 24 * -1, "bold")
 )
@@ -209,7 +208,7 @@ balance = canvas.create_text(
     72.0,
     232.0,
     anchor="nw",
-    text=f"{balance_last:.2f}€",
+    text=f"{balance_last:,.2f}€",
     fill="#0A4B00",
     font=("Ubuntu", 24 * -1, "bold")
 )
@@ -220,7 +219,7 @@ expense = canvas.create_text(
     360.0,
     152.0,
     anchor="nw",
-    text=f"{expense_total:.2f}€",
+    text=f"{expense_total:,.2f}€",
     fill="#660000",
     font=("Ubuntu", 24 * -1, "bold")
 )
@@ -282,7 +281,8 @@ def on_focus_out(event, textbox, placeholder):
 
 
 
-# 'name' background rectangle, textbox
+# 'name' background rectangle, textbox and placeholder
+name_placeholder: str = "e.g. -> Shopping"  # Placeholder text
 name_bg_rect_obj = PhotoImage(
     file=asset_path_build("name_bg_rect.png"))
 name_bg_rect_canvas = canvas.create_image(
@@ -302,8 +302,26 @@ name_textbox.place(
     width=224.0,
     height=30.0
 )
+name_textbox.insert( # Insert placeholder text
+    0, 
+    name_placeholder
+)
+name_textbox.config(  # Set placeholder text color to grey
+    fg='#848484'
+)
+name_textbox.bind( # Bind event handler for focus in
+    '<FocusIn>',
+    lambda event: on_entry_click(event, name_textbox, name_placeholder)
+)
+name_textbox.bind(  # Bind event handler for focus out
+    '<FocusOut>', 
+    lambda event: on_focus_out(event, name_textbox, name_placeholder)
+)
 
-# 'amount' background rectangle, textbox
+
+
+# 'amount' background rectangle, textbox and placeholder
+amount_placeholder: str = "e.g. -> -18.06"  # Placeholder text
 amount_bg_rect_obj = PhotoImage(
     file=asset_path_build("amount_bg_rect.png"))
 amount_bg_rect_canvas = canvas.create_image(
@@ -323,8 +341,26 @@ amount_textbox.place(
     width=96.0,
     height=30.0
 )
+amount_textbox.insert(  # Insert placeholder text
+    0, 
+    amount_placeholder
+)
+amount_textbox.config(  # Set text color to grey
+    fg='#848484'
+)
+amount_textbox.bind(  # Bind event handler for focus in
+    '<FocusIn>', 
+    lambda event: on_entry_click(event, amount_textbox, amount_placeholder)
+)
+amount_textbox.bind(  # Bind event handler for focus out
+    '<FocusOut>', 
+    lambda event: on_focus_out(event, amount_textbox, amount_placeholder)
+)
 
-# 'date' background rectangle, textbox
+
+
+# 'date' background rectangle, textbox and placeholder
+date_placeholder: str = "e.g. -> 2024-01-01"  # Placeholder text
 date_bg_rect_obj = PhotoImage(
     file=asset_path_build("date_bg_rect.png"))
 date_bg_rect_canvas = canvas.create_image(
@@ -344,32 +380,21 @@ date_textbox.place(
     width=96.0,
     height=30.0
 )
-
-
-
-# FIX THIS AS SOON AS POSSIBLE
-# ----------------------------------------------------------------------------
-# Placeholder and event handling for the 'name' text box
-name_placeholder: str = "e.g. -> Shopping"  # Placeholder text
-name_textbox.insert(0, name_placeholder)  # Insert placeholder text
-name_textbox.config(fg='#848484')  # Set text color to grey
-name_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, name_textbox, name_placeholder))  # Bind event handler for focus in
-name_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, name_textbox, name_placeholder))  # Bind event handler for focus out
-
-# Placeholder and event handling for the 'amount' text box
-amount_placeholder: str = "e.g. -> -18.06"  # Placeholder text
-amount_textbox.insert(0, amount_placeholder)  # Insert placeholder text
-amount_textbox.config(fg='#848484')  # Set text color to grey
-amount_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, amount_textbox, amount_placeholder))  # Bind event handler for focus in
-amount_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, amount_textbox, amount_placeholder))  # Bind event handler for focus out
-
-# Placeholder and event handling for the 'date' text box
-date_placeholder: str = "e.g. -> 2024-01-01"  # Placeholder text
-date_textbox.insert(0, date_placeholder)  # Insert placeholder text
-date_textbox.config(fg='#848484')  # Set text color to grey
-date_textbox.bind('<FocusIn>', lambda event: on_entry_click(event, date_textbox, date_placeholder))  # Bind event handler for focus in
-date_textbox.bind('<FocusOut>', lambda event: on_focus_out(event, date_textbox, date_placeholder))  # Bind event handler for focus out
-# ----------------------------------------------------------------------------
+date_textbox.insert(  # Insert placeholder text
+    0, 
+    date_placeholder
+)
+date_textbox.config(  # Set text color to grey
+    fg='#848484'
+)
+date_textbox.bind(  # Bind event handler for focus in
+    '<FocusIn>', 
+    lambda event: on_entry_click(event, date_textbox, date_placeholder)
+)
+date_textbox.bind(  # Bind event handler for focus out
+    '<FocusOut>', 
+    lambda event: on_focus_out(event, date_textbox, date_placeholder)
+)
 
 
 
