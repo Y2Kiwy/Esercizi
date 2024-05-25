@@ -189,22 +189,16 @@ print("Exercise: 9-7. Admin ↓\n")
 
 class Admin(User):
 
-    def __init__(self, first_name: str, last_name: str, age: int, gender: str, height: int, weight: int, privileges: dict) -> None:
+    def __init__(self, first_name: str, last_name: str, age: int, gender: str, height: int, weight: int, privileges: list[str]) -> None:
         super().__init__(first_name, last_name, age, gender, height, weight)
         self.privileges = privileges
 
     def show_privileges(self):
-        print(f"\tUser {user.first_name} {user.last_name} privileges:\n")
-        for privilege, status in self.privileges.items():
-            print(f"\t\t{privilege}: {status}")
+        print(f"\tUser {user.first_name} {user.last_name} privileges")
+        for privilege in self.privileges:
+            print(f"\t\t{privilege}")
 
-admin_privileges: dict = {
-    "Add posts": True,
-    "Remove posts": True,
-    "Ban users": True,
-    "Close pages": False,
-    "Set privileges": False
-}
+admin_privileges: list[str] = ["Add Posts", "Remove Posts", "Mute Users"]
 
 admin1: Admin = Admin("Robert", "Clark", 30, "Male", 185, 85, admin_privileges)
 
@@ -218,7 +212,29 @@ print("\n") # Formatting
 # Exercise 9.8 ------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-8. Privileges ↓\n")
 
+class Privileges:
+    
+    def __init__(self, privileges: list[str]) -> None:
+        self.privileges: list[str] = privileges
 
+    def show_privileges(self):
+        print(f"\tActive privileges")
+        for privilege in self.privileges:
+            print(f"\t\t{privilege}")
+
+
+class AdminV2(User):
+
+    def __init__(self, first_name: str, last_name: str, age: int, gender: str, height: int, weight: int, privileges: Privileges) -> None:
+        super().__init__(first_name, last_name, age, gender, height, weight)
+        self.privileges = privileges
+
+
+admin_privilegesV2: Privileges = Privileges(["Add Posts", "Remove Posts", "Mute Users"])
+
+admin2: AdminV2 = AdminV2("Frederik", "Jhonson", 26, "Male", 175, 65, admin_privilegesV2)
+
+admin2.privileges.show_privileges()
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -228,7 +244,7 @@ print("\n") # Formatting
 # Exercise 9.9 ------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-9. Battery Upgrade ↓\n")
 
-
+# Exercise electric_car.py do not exists in "Esercizi Lezione 6 (Obbligatori)"
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -238,7 +254,7 @@ print("\n") # Formatting
 # Exercise 9.10 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-10. Imported Restaurant ↓\n")
 
-
+pass
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -248,7 +264,7 @@ print("\n") # Formatting
 # Exercise 9.11 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-11. Imported Admin ↓\n")
 
-
+pass
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -258,7 +274,7 @@ print("\n") # Formatting
 # Exercise 9.12 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-12. Multiple Modules ↓\n")
 
-
+pass
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -268,7 +284,29 @@ print("\n") # Formatting
 # Exercise 9.13 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-13. Dice ↓\n")
 
+class Dice:
 
+    def __init__(self, sides: int) -> None:
+        self.sides: int = sides
+
+    def roll_die(self):
+        print(f"Number rolled on the {self.sides} sides dice: {random.randint(1, self.sides)}")
+
+dice1: Dice = Dice(6)
+for _ in range(10):
+    dice1.roll_die()
+
+print() # Formatting
+
+dice2: Dice = Dice(10)
+for _ in range(10):
+    dice2.roll_die()
+
+print() # Formatting
+
+dice3: Dice = Dice(20)
+for _ in range(10):
+    dice3.roll_die()
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
