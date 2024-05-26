@@ -316,7 +316,11 @@ print("\n") # Formatting
 # Exercise 9.14 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-14. Lottery ↓\n")
 
+possible_charts: list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'G', 'M', 'C', 'L']
 
+winning_charts: list = [chart for chart in random.sample(possible_charts, 4)]
+
+print(f"These are the winning charts -> {winning_charts}")
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -326,9 +330,20 @@ print("\n") # Formatting
 # Exercise 9.15 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-15. Lottery Analysis ↓\n")
 
+ticket_pulls: int = 0
 
+my_ticket: list = ['7', 'A', '6', 'G']
+
+while True:
+    
+    ticket_pulls += 1
+    
+    if my_ticket == winning_charts:
+        print(f"Yout ticket wins after {ticket_pulls} ticket pulls")
+        break
+    else:
+        winning_charts: list = [chart for chart in random.sample(possible_charts, 4)]
+        
 
 print("\n") # Formatting
 # -------------------------------------------------------------------------------------------------------------------------------
-
-
