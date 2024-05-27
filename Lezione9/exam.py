@@ -72,7 +72,7 @@ class Bank:
     def __init__(self) -> None:
         self.accounts: dict[str, Account] = {}
 
-    def create_account(self, account_id: str) -> None:
+    def create_account(self, account_id: str) -> Account:
         if account_id in self.accounts:
             raise ValueError("Account with this ID already exists")
         new_account: Account = Account(account_id, 0)
@@ -167,14 +167,14 @@ class Member:
         self.borrowed_books: set[Book] = set()
 
     def borrow_book(self, book: Book) -> None:
-        if not book in self.borrowed_books:
+        if not book.is_borrowed:
             book.borrow()
             self.borrowed_books.add(book)
         else:
             raise ValueError("Book is already borrowed")
 
     def return_book(self, book: Book) -> None:
-        if book in self.borrowed_books:
+        if book.is_borrowed:
             book.return_book()
             self.borrowed_books.remove(book)
         else:
