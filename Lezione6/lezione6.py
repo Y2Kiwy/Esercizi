@@ -330,16 +330,20 @@ print("\n") # Formatting
 # Exercise 9.15 -------------------------------------------------------------------------------------------------------------------
 print("Exercise: 9-15. Lottery Analysis ↓\n")
 
+import time
+
 ticket_pulls: int = 0
 
 my_ticket: list = ['7', 'A', '6', 'G']
 
+start: int = time.time()
 while True:
     
     ticket_pulls += 1
     
     if my_ticket == winning_charts:
-        print(f"Yout ticket wins after {ticket_pulls} ticket pulls")
+        end: int = time.time()
+        print(f"Yout ticket wins after {ticket_pulls} ticket pulls and {end - start:.3f} seconds")
         break
     else:
         winning_charts: list = [chart for chart in random.sample(possible_charts, 4)]
