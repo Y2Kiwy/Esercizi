@@ -343,7 +343,7 @@ while True:
     
     if my_ticket == winning_charts:
         end: int = time.time()
-        print(f"Yout ticket wins after {ticket_pulls} ticket pulls and {end - start:.3f} seconds")
+        print(f"\tYout ticket wins after {ticket_pulls} ticket pulls and {end - start:.3f} seconds")
         break
     else:
         winning_charts: list = [chart for chart in random.sample(possible_charts, 4)]
