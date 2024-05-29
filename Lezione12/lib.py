@@ -14,36 +14,33 @@ class Library:
     def add_book(self, book: Book) -> None:
         if book not in self.catalog:
             self.catalog.append(book)
-            print(f"{book.title} correctly added to library")
+            return f"{book.title} correctly added to library"
 
     def borrow_book(self, book_title: str) -> None:
         for book in self.catalog:
             if book_title == book.title:
                 if not book.is_borrowed:
                     book.is_borrowed = True
-                    print(f"{book.title} correctly borrowed: 'book.is_borrowed: {book.is_borrowed}'")
-
-                    return
+                    return f"{book.title} correctly borrowed: 'book.is_borrowed: {book.is_borrowed}'"
                 else:
-                    raise ValueError("Book is already borrowed")
-        raise ValueError("Book do not exist")
+                    return f"Cannot borrow {book.title} it's already borrowed"
+        return "Book do not exist"
 
     def return_book(self, book_title: str) -> None:
         for book in self.catalog:
             if book_title == book.title:
                 if book.is_borrowed:
                     book.is_borrowed = False
-                    print(f"{book.title} correctly returned: 'book.is_borrowed: {book.is_borrowed}'")
-                    return
+                    return f"{book.title} correctly returned: 'book.is_borrowed: {book.is_borrowed}'"
                 else:
-                    raise ValueError("Book is not borrowed")
-        raise ValueError("Book do not exist")
+                    return f"Cannot return {book.title}, it's alerady returned"
+        return "Book do not exist"
     
     def get_borrowed_books(self) -> list[str]:
         if self.catalog:
-            return [book.title for book in self.catalog]
+            return [book.title for book in self.catalog if not book.is_borrowed]
         else:
-            raise ValueError("There are no books in the library")
+            raise RuntimeError ("There are no books in the library")
 
 
 
@@ -56,21 +53,15 @@ def main():
     book2 = Book("002", "To Kill a Mockingbird", "Harper Lee")
     book3 = Book("003", "1984", "George Orwell")
 
-    library.add_book(book1)
-    library.add_book(book2)
-    library.add_book(book3)
+    print(library.add_book(book1))
+    print(library.add_book(book2))
+    print(library.add_book(book3))
 
     # Prestito di un libro da parte di un utente
-    try:
-        library.borrow_book("To Kill a Mockingbird")
-    except ValueError as e:
-        print(e)
+    print(library.borrow_book("To Kill a Mockingbird"))
 
     # Restituzione di un libro da parte di un utente
-    try:
-        library.return_book("To Kill a Mockingbird")
-    except ValueError as e:
-        print(e)
+    print(library.return_book("To Kill a Mockingbird"))
 
     # Visualizzazione dei libri disponibili per il prestito
     try:
