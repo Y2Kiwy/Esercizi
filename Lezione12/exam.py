@@ -126,7 +126,6 @@ class Moto(Veicolo):
 
 
 # Exercise 4: ----------------------------------------------------------------
-
 class Specie:
 
     def __init__(self, nome: str, popolazione: int, tasso_crescita: float) -> None:
@@ -152,7 +151,7 @@ class BuffaloKlingon(Specie):
         self.popolazione = self.popolazione * (1 + self.tasso_crescita/100)
 
     def anni_per_superare(self, altra_specie: Specie) -> int:
-        anni: int = 0
+        anni: int = 1
         while self.popolazione <= altra_specie.popolazione:
             anni += 1
             self.cresci()
@@ -160,9 +159,9 @@ class BuffaloKlingon(Specie):
         return anni
 
     def getDensita(self, area_kmq: int) -> int:
-        anni: int = 0
+        anni: int = 1
         while True:
-            anni += 0
+            anni += 1
             if self.popolazione / area_kmq >= 1:
                 return anni
             self.cresci()
@@ -176,7 +175,7 @@ class Elefante(Specie):
         self.popolazione = self.popolazione * (1 + self.tasso_crescita/100)
 
     def anni_per_superare(self, altra_specie: Specie) -> int:
-        anni: int = 0
+        anni: int = 1
         while self.popolazione <= altra_specie.popolazione:
             anni += 1
             self.cresci()
@@ -184,9 +183,9 @@ class Elefante(Specie):
         return anni
 
     def getDensita(self, area_kmq: int) -> int:
-        anni: int = 0
+        anni: int = 1
         while True:
-            anni += 0
+            anni += 1
             if self.popolazione / area_kmq >= 1:
                 return anni
             self.cresci()
