@@ -142,10 +142,10 @@ class Specie:
     def getDensita(self, area_kmq: int) -> int:
         pass
 
-class BuffaloKlingon(Specie):
+class BufaloKlingon(Specie):
 
     def __init__(self, popolazione: int, tasso_crescita: float) -> None:
-        super().__init__("BuffaloKlingon", popolazione, tasso_crescita)
+        super().__init__("BufaloKlingon", popolazione, tasso_crescita)
 
     def cresci(self) -> None:
         self.popolazione = self.popolazione * (1 + self.tasso_crescita/100)
@@ -154,17 +154,20 @@ class BuffaloKlingon(Specie):
         anni: int = 1
         while self.popolazione <= altra_specie.popolazione:
             anni += 1
+            print(f"Popolazione pre-crescita {self.nome} {self.popolazione} e {altra_specie.nome} {altra_specie.popolazione}")
             self.cresci()
             altra_specie.cresci()
+            print(f"Popolazione post-crescita {self.nome} {self.popolazione} e {altra_specie.nome} {altra_specie.popolazione}\n")
         return anni
 
     def getDensita(self, area_kmq: int) -> int:
-        anni: int = 1
-        while True:
+        anni: int = 0
+        while self.popolazione / area_kmq < 1:
             anni += 1
-            if self.popolazione / area_kmq >= 1:
-                return anni
+            print(f"Popolazione pre-crescita {self.nome} {self.popolazione} rapport -> {self.popolazione / area_kmq}")
             self.cresci()
+            print(f"Popolazione post-crescita {self.nome} {self.popolazione} rapport -> {self.popolazione / area_kmq}\n")
+        return anni
 
 class Elefante(Specie):
 
@@ -178,15 +181,30 @@ class Elefante(Specie):
         anni: int = 1
         while self.popolazione <= altra_specie.popolazione:
             anni += 1
+            print(f"Popolazione pre-crescita {self.nome} {self.popolazione} e {altra_specie.nome} {altra_specie.popolazione}")
             self.cresci()
             altra_specie.cresci()
+            print(f"Popolazione post-crescita {self.nome} {self.popolazione} e {altra_specie.nome} {altra_specie.popolazione}\n")
         return anni
 
     def getDensita(self, area_kmq: int) -> int:
-        anni: int = 1
-        while True:
+        anni: int = 0
+        while self.popolazione / area_kmq < 1:
             anni += 1
-            if self.popolazione / area_kmq >= 1:
-                return anni
+            print(f"Popolazione pre-crescita {self.nome} {self.popolazione} rapport -> {self.popolazione / area_kmq}")
             self.cresci()
+            print(f"Popolazione post-crescita {self.nome} {self.popolazione} rapport -> {self.popolazione / area_kmq}\n")
+        return anni
+
+# Creazione delle istanze delle specie
+bufalo_klingon = BufaloKlingon(100, 15)  # Crea un'istanza di BufaloKlingon con popolazione 100 e tasso di crescita 15%
+elefante = Elefante(10, 35)  # Crea un'istanza di Elefante con popolazione 10 e tasso di crescita 35%
+
+# Calcolo degli anni necessari per superare
+anni_necessari = elefante.anni_per_superare(bufalo_klingon)  # Calcola gli anni necessari affinché gli elefanti superino i bufali Klingon
+print(f"Anni necessari perché la popolazione di elefanti superi quella dei bufali Klingon: {anni_necessari}")
+
+# Calcolo della densità di popolazione per i Bufali Klingon
+anni_densita = bufalo_klingon.getDensita(1500)  # Calcola gli anni necessari per raggiungere una densità di 1 bufalo Klingon per km²
+print(f"Anni necessari per raggiungere una densità di 1 Bufalo Klingon per km quadrato: {anni_densita}")
 # ----------------------------------------------------------------------------
