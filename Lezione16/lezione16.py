@@ -34,4 +34,4 @@ class Media:
         return (self.reviews.count(review) / len(self.reviews)) * 100
     
     def review(self) -> None:
-        print(f"Titolo del film: {self.title}\nVoto Medio: {self.get_avg()}\nGiudizio: {self.get_rate()}\nTERRIBILE: {self.rate_percentage(1)}\nBRUTTO: {self.rate_percentage(2)}\nNORMALE: {self.rate_percentage(3)}\nBELLO: {self.rate_percentage(4)}\nGRANDIOSO: {self.rate_percentage(5)}")
+        print(f"Titolo del film: {self.title}\nVoto Medio: {self.get_avg()}\nGiudizio: {self.get_rate()}\nTERRIBILE: {self.rate_percentage(1)}%\nBRUTTO: {self.rate_percentage(2)}%\nNORMALE: {self.rate_percentage(3)}%\nBELLO: {self.rate_percentage(4)}%\nGRANDIOSO: {self.rate_percentage(5)}%")
