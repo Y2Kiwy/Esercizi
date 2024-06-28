@@ -132,18 +132,10 @@ class MyStack:
 
 
 # Exercise 3 -----------------------------------------------------------------
-
-'''Not finished'''
-
 class Node:
-    pos: int = 1
-
     def __init__(self, val: list, next: "Node" = None) -> None:
         self.val: list = val
         self.next: Node = next
-        self.pos: int = Node.pos
-        
-        Node.pos += 1
 
 class LinkedList:
     
@@ -163,67 +155,79 @@ class LinkedList:
 
 def get_list_lenght(head: Node) -> int:
     current: Node = head
+    counter: int = 1
 
     while current.next:
+        counter += 1
         current = current.next
 
-    return current.pos
+    return counter
 
 def is_palindrome(head: Node) -> bool:
+    # Get the lenght of the linked list
     list_lenght: int = get_list_lenght(head)
+
+    # If there is only one Node, return False
+    if list_lenght == 1:
+        return True
     
-    half_list: int = list_lenght // 2
+    # If there are only two Nodes return False if they are different, else True
+    elif list_lenght == 2:
+        return False if head.val != head.next.val else True
+    
+    else:
+        # Get the half of the list
+        half_list: int = list_lenght // 2
 
-    #print(half_list)
+        # Initialize 'p1', 'p2' and 'p3'
+        p1: Node = head
+        p2: Node = p1.next
+        p3: Node = p2.next
 
-    prev_n: Node = head
-    cur_n: Node = head.next
-    next_n: Node = cur_n.next
+        # Initialize a position tracker for 'p1' Node
+        p1_pos: int = 1
 
-    while cur_n.next:
+        # Scroll the list until 'p1' is in its tail
+        while p2.next:
+
+            # Delete the middle Node pointer
+            if p1_pos == half_list:
+                p1.next = None
+
+            # If 'p1' pass the half of the list, start to revers pointers
+            if p1_pos > half_list:
+                p2.next = p1
+
+            # 'p1', 'p2' and 'p3' move up in the list
+            p1 = p2
+            p2 = p3
+            p3 = p2.next
+
+            # Keep track of the 'p1' Node position
+            p1_pos += 1
+
+        # Reverse the last Node pointer
+        p2.next = p1
+
         
-        #print(f"{prev_n.pos} > {half_list}")
-        if prev_n.pos > half_list:
-            #print(prev_n.pos)
-            #print("\nReversed punt")
-            cur_n.next = prev_n
+        # Initialize head and tail of the linked list
+        head_c: Node = head
+        tail_c: Node = p2
 
-        #print("\nprev_n: ", prev_n.pos)
-        prev_n = cur_n
-        #print("cur_n: ", cur_n.pos)
-        cur_n = next_n
-        #print("next_n: ", next_n.pos)
-        next_n = cur_n.next
+        # Start to check the two half of the linkd list
+        while head_c.next and tail_c.next:
 
-    cur_n.next = prev_n
+            # If head and tail are different, return False
+            if head_c.val != tail_c.val:
+                return False
+            
+            # If head and tail are equals, continue to check the list
+            else:
+                head_c = head_c.next
+                tail_c = tail_c.next
 
-    tail: Node = cur_n
-
-    while head.next and tail.next:
-
-        if head.val != tail.val:
-            #print(f"{head.val} != {tail.val}")
-            return False
-        
-        else:
-            head = head.next
-            tail = tail.next
-
-    return True
-
-ll1 = LinkedList()
-for value in [1, 2, 3, 2, 1]:
-    ll1.append(value)
-print(is_palindrome(ll1.head))
-
-ll2 = LinkedList()
-for value in [1, 2, 3, 4, 5]:
-    ll2.append(value)
-print(is_palindrome(ll2.head))
-
-ll3 = LinkedList()
-ll3.append(1)
-print(is_palindrome(ll3.head))
+        # If all list values has been checked, return True
+        return True
 # ----------------------------------------------------------------------------
 
 
