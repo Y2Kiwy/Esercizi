@@ -2,7 +2,7 @@
 class Node:
     pos: int = 0
 
-    def __init__(self, val: list, next: "Node" = None) -> None:
+    def __init__(self, val: int, next: "Node" = None) -> None:
         self.val: list = val
         self.next: Node = next
         self.pos: int = Node.pos
@@ -65,13 +65,6 @@ def has_cycle(head: Node) -> list[int]:
         
         # Go to the next 'Node'
         current = current.next
-
-
-ll2 = LinkedList()
-for i in range(5):
-    ll2.append(i)
-
-print(has_cycle(ll2.head))
 # ----------------------------------------------------------------------------
 
 
@@ -139,11 +132,98 @@ class MyStack:
 
 
 # Exercise 3 -----------------------------------------------------------------
-class LinkedList:
-    pass
+
+'''Not finished'''
+
+class Node:
+    pos: int = 1
+
+    def __init__(self, val: list, next: "Node" = None) -> None:
+        self.val: list = val
+        self.next: Node = next
+        self.pos: int = Node.pos
         
-def is_palindrome(head: Node) -> list[int]:
-    pass
+        Node.pos += 1
+
+class LinkedList:
+    
+    def __init__(self) -> None:
+        self.head: Node = None
+
+    def append(self, val: Node) -> None:
+        if not self.head:
+            self.head = Node(val)
+
+        else:
+            current: Node = self.head
+            while current.next:
+                current = current.next
+
+            current.next = Node(val)
+
+def get_list_lenght(head: Node) -> int:
+    current: Node = head
+
+    while current.next:
+        current = current.next
+
+    return current.pos
+
+def is_palindrome(head: Node) -> bool:
+    list_lenght: int = get_list_lenght(head)
+    
+    half_list: int = list_lenght // 2
+
+    #print(half_list)
+
+    prev_n: Node = head
+    cur_n: Node = head.next
+    next_n: Node = cur_n.next
+
+    while cur_n.next:
+        
+        #print(f"{prev_n.pos} > {half_list}")
+        if prev_n.pos > half_list:
+            #print(prev_n.pos)
+            #print("\nReversed punt")
+            cur_n.next = prev_n
+
+        #print("\nprev_n: ", prev_n.pos)
+        prev_n = cur_n
+        #print("cur_n: ", cur_n.pos)
+        cur_n = next_n
+        #print("next_n: ", next_n.pos)
+        next_n = cur_n.next
+
+    cur_n.next = prev_n
+
+    tail: Node = cur_n
+
+    while head.next and tail.next:
+
+        if head.val != tail.val:
+            #print(f"{head.val} != {tail.val}")
+            return False
+        
+        else:
+            head = head.next
+            tail = tail.next
+
+    return True
+
+ll1 = LinkedList()
+for value in [1, 2, 3, 2, 1]:
+    ll1.append(value)
+print(is_palindrome(ll1.head))
+
+ll2 = LinkedList()
+for value in [1, 2, 3, 4, 5]:
+    ll2.append(value)
+print(is_palindrome(ll2.head))
+
+ll3 = LinkedList()
+ll3.append(1)
+print(is_palindrome(ll3.head))
 # ----------------------------------------------------------------------------
 
 
@@ -216,10 +296,6 @@ def longest_palindrome(s: str) -> int:
         longest_palindrome_length += 1
     
     return longest_palindrome_length
-        
-        
-
-
 # ----------------------------------------------------------------------------
 
 
