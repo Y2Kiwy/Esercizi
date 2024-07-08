@@ -1,0 +1,15 @@
+# Copy the last Python version from dokerhub
+FROM python
+
+# Change the working directory in the docker /app container directory
+WORKDIR /app
+
+# Copy the content of current directory (.) into the docker /app cointainer directory
+COPY . /app
+
+# Launch the specified file through the Python interprete executing the command -> "python test.py"
+CMD ["python", "test.py"]
+
+# Now the docker container can be build using "docker build -t container_name ."
+
+# Now the python file can be execute using "docker run container_name"
