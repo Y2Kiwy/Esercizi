@@ -194,6 +194,7 @@ class Member:
                 self.borrowed_books.remove(book)
             else:
                 raise ValueError("Book not borrowed by this member")
+
 class Library:
     def __init__(self) -> None:
         self.books: dict[str, Book] = dict()
@@ -240,5 +241,44 @@ class Library:
         for book in self.members[member_id].borrowed_books:
             borrowed_names.append(book.title)
         return borrowed_names
+
+# ----------------------------------------------------------------------------
+
+
+
+# Esercizio 13 ---------------------------------------------------------------
+
+class Veicolo:
+    def __init__(self, marca: str, modello: str, anno: int) -> None:
+        self.marca: str = marca
+        self.modello: str = modello
+        self.anno: int = anno
+
+    def descrivi_veicolo(self) -> None:
+        print(f"Marca: {self.marca}, Modello: {self.modello}, Anno: {self.anno}")
+
+class Auto(Veicolo):
+    def __init__(self, marca: str, modello: str, anno: int, n_porte: int) -> None:
+        super().__init__(marca, modello, anno)
+        self.n_porte: int = n_porte
+
+    def descrivi_veicolo(self) -> None:
+        print(f"Marca: {self.marca}, Modello: {self.modello}, Anno: {self.anno}, Numero di porte: {self.n_porte}")
+
+class Moto(Veicolo):
+    def __init__(self, marca: str, modello: str, anno: int, tipo: str) -> None:
+        super().__init__(marca, modello, anno)
+        self.tipo: str = tipo
+
+    def descrivi_veicolo(self) -> None:
+        print(f"Marca: {self.marca}, Modello: {self.modello}, Anno: {self.anno}, Tipo: {self.tipo}")
+
+# ----------------------------------------------------------------------------
+
+
+
+# Esercizio 16 ---------------------------------------------------------------
+
+
 
 # ----------------------------------------------------------------------------
