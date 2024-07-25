@@ -102,6 +102,45 @@ class VideoRentalStore:
 # ----------------------------------------------------------------------------
 
 
+# Exercise 2 -----------------------------------------------------------------
+
+def trova_chiave_per_valore(dizionario: dict[str: int], valore: int) -> str:
+    """Find the key of a value in a dictionary"""
+    for key, value in dizionario.items():
+        if valore == value:
+            return key
+        
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 3 -----------------------------------------------------------------
+
+def transform(x: int) -> int:
+    """Edit the input number based on if it is even or odd"""
+    if (x % 2) == 0:
+        x /= 2
+    else:
+        x = (x * 3) - 1
+    return x
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 4 -----------------------------------------------------------------
+
+def merge_dictionaries(dict1: dict, dict2: dict) -> dict:
+    """Merge two dictonaries"""
+    for key, value in dict2.items():
+        if key in dict1:
+            dict1[key] += value
+        else:
+            dict1[key] = value
+    return dict1
+
+# ----------------------------------------------------------------------------
+
 
 
 # Exercise 5 -----------------------------------------------------------------
@@ -138,13 +177,44 @@ class Bank:
             self.accounts[account_id].deposit(amount)
         else:
             raise ValueError("Account not found")
-
+    
     def get_balance(self, account_id) -> float:
         """Return the balance of a scpecific account"""
         if account_id in self.accounts:
             return self.accounts[account_id].get_balance()
         else:
             raise ValueError("Account not found")
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 6 -----------------------------------------------------------------
+
+def print_seq(): 
+    """Print different sequences"""
+    
+    print("Sequenza a):")
+    for a in range(1, 8):
+        print(a)
+    print()
+
+    print("Sequenza b):")
+    for b in range(3, 24, 5):
+        print(b)
+    print()
+
+    print("Sequenza c):")
+    for c in range(20, -11, -6):
+        print(c)
+    print()
+
+    print("Sequenza d):")
+    for d in range(19, 52, 8):
+        print(d)
+    print()
+    
+    return
 
 # ----------------------------------------------------------------------------
 
@@ -246,6 +316,81 @@ class Library:
 
 
 
+# Exercise 8 -----------------------------------------------------------------
+
+def classifica_numeri(lista: int) -> dict[str:list[int]]:
+    """Divide even and odd numbers"""
+    number_dict: dict = {
+        'pari': [],
+        'dispari': []
+    }
+    for n in lista:
+        if (n % 2) == 0:
+            number_dict['pari'].append(n)
+        else:
+            number_dict['dispari'].append(n)
+    return number_dict
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 9 -----------------------------------------------------------------
+
+def filtra_e_mappa(prodotti: dict[str:float]) -> dict[str:float]:
+    """So random that it doesen't need a comment"""
+    discounts: dict = dict()
+    for key, value in prodotti.items():
+        if value > 20:
+            discounts[key] = value - ((value / 100) * 10)
+    return discounts
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 10 ----------------------------------------------------------------
+
+def frequency_dict(elements: list) -> dict:
+    """Map the occurrences of input list elements"""
+    occurrences: dict = dict()
+    for item in elements:
+        item_occurence: int = elements.count(item)
+        occurrences[item] = item_occurence
+    return occurrences
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 11 ----------------------------------------------------------------
+
+def check_combination(conditionA: bool, conditionB: bool, conditionC: bool) -> str:
+    """Also so random that it doesen't need a comment"""
+    if conditionA:
+        return "Operazione permessa"
+    elif conditionB and conditionC:
+        return "Operazione permessa"
+    else:
+        return "Operazione negata"
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 12 ----------------------------------------------------------------
+
+def check_access(username: str, password: str, is_active: bool) -> str:
+    """Same as exercise 11"""
+    if username == "admin" and password == "12345" and is_active:
+        return "Accesso consentito"
+    else:
+        return "Accesso negato"
+
+# ----------------------------------------------------------------------------
+
+
+
 # Esercizio 13 ---------------------------------------------------------------
 
 class Veicolo:
@@ -277,8 +422,104 @@ class Moto(Veicolo):
 
 
 
+# Exercise 14 ----------------------------------------------------------------
+
+def sum_above_threshold(numbers: list[int], threshold: int) -> int:
+    """Sum only the number above the threshold"""
+    summed: int = 0
+    for n in numbers:
+        summed += n if n > threshold else 0
+    return summed
+
+# ----------------------------------------------------------------------------
+
+
+
+# Exercise 15 ----------------------------------------------------------------
+
+def lista_a_dizionario(tuples: tuple) -> dict[str:list[int]]:
+    """Convert a list of tuples into a dictionary"""
+    dictionary: dict = dict()
+    for pair in tuples:
+        if pair[0] in dictionary:
+            dictionary[pair[0]].append(pair[1])  
+        else:
+            dictionary[pair[0]] = [pair[1],]
+    return dictionary
+
+# ----------------------------------------------------------------------------
+
+
+
 # Esercizio 16 ---------------------------------------------------------------
 
+class RecipeManager:
+    def __init__(self) -> None:
+        self.recipes: dict[str, list[str]] = dict()
 
-
+    def create_recipe(self, name: str, ingredients: list[str]) -> dict[str, list[str]] | str:
+        """Create a new recipe if it doesn't already exist"""
+        if not name in self.recipes:
+            self.recipes[name] = ingredients
+            return {name: ingredients}
+        
+    def  add_ingredient(self, recipe_name: str, ingredient: str) -> dict[str, list[str]] | str:
+        """Add an ingredient to a recipe"""
+        if recipe_name in self.recipes:
+            if not ingredient in self.recipes[recipe_name]:
+                self.recipes[recipe_name].append(ingredient)
+                return {recipe_name: self.recipes[recipe_name]}
+            else:
+                return "The ingredient already exists in the recipe"
+        else:
+            return "The recipe doesn't exist"
+        
+    def  remove_ingredient(self, recipe_name: str, ingredient: str) -> dict[str, list[str]] | str:
+        """Remove an ingredient from a recipe"""
+        if recipe_name in self.recipes:
+            if ingredient in self.recipes[recipe_name]:
+                self.recipes[recipe_name].remove(ingredient)
+                return {recipe_name: self.recipes[recipe_name]}
+            else:
+                return "The ingredient doesn't exists in the recipe"
+        else:
+            return "The recipe doesn't exist"
+        
+    def update_ingredient(self, recipe_name: str, old_ingredient: str, new_ingredient: str) -> dict[str, list[str]] | str:
+        """Edit an ingredient from a recipe"""
+        if recipe_name in self.recipes:
+            if old_ingredient in self.recipes[recipe_name]:
+                old_ingredient_index: int = self.recipes[recipe_name].index(old_ingredient)
+                self.recipes[recipe_name][old_ingredient_index] = new_ingredient
+                return {recipe_name: self.recipes[recipe_name]}
+            else:
+                return "The ingredient doesn't exists in the recipe"
+        else:
+            return "The recipe doesn't exist"
+        
+    def list_recipes(self) -> dict[str, list[str]]:
+        """List all the recipes"""
+        recipes_name: list[str] = list()
+        for name in self.recipes.keys():
+            recipes_name.append(name)
+        return recipes_name
+    
+    def  list_ingredients(self, recipe_name: str) -> list[str] | str:
+        """List all the ingredients of a recipe"""
+        if recipe_name in self.recipes:
+            return self.recipes[recipe_name]
+        else:
+            return "The recipe doesn't exist"
+        
+    def search_recipe_by_ingredient(self, ingredient: str) -> dict[str, list[str]] | str:
+        """Find all recipes containing a specific ingredient"""
+        found_recipes = {}
+        for name, ingredients in self.recipes.items():
+            if ingredient in ingredients:
+                found_recipes[name] = ingredients
+        if found_recipes:
+            return found_recipes
+        else:
+            return "No recipes contain the specified ingredient"
+    
 # ----------------------------------------------------------------------------
