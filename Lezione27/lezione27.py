@@ -439,7 +439,7 @@ def sum_above_threshold(numbers: list[int], threshold: int) -> int:
 
 def lista_a_dizionario(tuples: tuple) -> dict[str:list[int]]:
     """Convert a list of tuples into a dictionary"""
-    dictionary: dict = dict()
+    dictionary: dict[str, list[int]] = dict()
     for pair in tuples:
         if pair[0] in dictionary:
             dictionary[pair[0]].append(pair[1])  
